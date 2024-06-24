@@ -19,5 +19,5 @@ router.post("/logout", LogOut);
 //the google function will be post req as we send data from user's end to the server's end to use firebase auth
 router.post("/google", GoogleAuth);
 
-//exporting the created routes to use in indwx.js
+//exporting the created routes to use in index.js
 module.exports = router;
