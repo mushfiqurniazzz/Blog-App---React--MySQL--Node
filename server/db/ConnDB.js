@@ -32,12 +32,54 @@ const ConnDb = async (req, res) => {
       `USE \`${process.env.DB_DATABASE}\``
     );
     //if not successfully switched to the created database
-    if (SwtichDatabase) {
+    if (!SwtichDatabase) {
       console.log(`Couldn't Switch to ${process.env.DB_DATABASE}`);
     }
     //if switched to the created database successfully
     console.log(`Switched to ${process.env.DB_DATABASE}`);
 
-    //await create table for email, username, password, posts
-  } catch (error) {}
+    //await create table for email, username, password, posts and users for access
+    const CreateAuthTable = await pool.query(
+      `CREATE TABLE IF NOT EXISTS \`${process.env.DB_AUTHTABLE}\`(
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(50) NOT NULL UNIQUE,
+      username VARCHAR(50) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )`
+    );
+
+    //if not successfully created the user authentication table
+    if (!CreateAuthTable) {
+      console.log(`Error Creating Table, ${process.env.DB_AUTHTABLE}`);
+    }
+
+    //else case, if the user authentication table was created successfully
+    console.log(`Successfully Created Table, ${process.env.DB_AUTHTABLE}`);
+
+    //await create table for storing post data, post tittle, post image, post paragraph
+    const CreatePostTable = await pool.query(
+      `CREATE TABLE IF NOT EXISTS \`${process.env.DB_POSTTABLE}\`(
+        post_id INT AUTO_INCREMENT PRIMARY KEY,
+        author_id INT,
+        post_title VARCHAR(250) NOT NULL,
+        post_body TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (author_id) REFERENCES \`${process.env.DB_AUTHTABLE}\` (id)
+      )`
+    );
+
+    //if not successfully created the post table
+    if (!CreatePostTable) {
+      console.log(`Error Creating Table, ${process.env.DB_POSTTABLE}`);
+    }
+
+    //if the post table was successfully created
+    console.log(`Successfully Created Table, ${process.env.DB_POSTTABLE}`);
+  } catch (error) {
+    console.error("Error Connecting to DataBase")
+  }
 };
+
+//exporting the database connection function
+module.exports = ConnDb;

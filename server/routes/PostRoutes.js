@@ -6,27 +6,27 @@ const router = express.Router();
 
 //importing the post controller functions
 const {
-  addPost,
-  getPosts,
-  getPost,
-  deletePost,
-  updatePost
+  AddPost,
+  GetPosts,
+  GetPost,
+  DeletePost,
+  UpdatePost
 } = require("../controllers/PostControllers");
 
 //the getPosts function will be get req as we fetch post datas from server's end to the user's end to show posts
-router.get("/", getPosts);
+router.get("/", GetPosts);
 
 //the getPost function will be get req as we fetch a specific post data from server's end to the user's end to show post
-router.get("/:id", getPost);
+router.get("/:id", GetPost);
 
 //the addPosts function will be a post req as we send data from user's end to the server's end to save a post
-router.post("/", addPost);
+router.post("/", AddPost);
 
 //the deletePost function will be delete req as we try to delete data from server's end by the user's end to delete posts
-router.delete("/:id", deletePost);
+router.delete("/:id", DeletePost);
 
 //the updatePost function will be a put req as e try to update a post from the user's end to the server's end to update post
-router.post("/:id", updatePost);
+router.post("/:id", UpdatePost);
 
 //exporting the created routes to use in index.js
 module.exports = router;

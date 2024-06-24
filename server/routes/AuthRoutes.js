@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 
 //importing the auth controller functions
-const { SignUp, LogIn, LogOut, googleAuth } = require("../controllers/AuthControllers");
+const { SignUp, LogIn, LogOut, GoogleAuth } = require("../controllers/AuthControllers");
 
 //the signup function will be post req as we send data from user's end to the server's end to signup
 router.post("/signup", SignUp);
@@ -17,7 +17,7 @@ router.post("/login", LogIn);
 router.post("/logout", LogOut);
 
 //the google function will be post req as we send data from user's end to the server's end to use firebase auth
-router.post("/google", googleAuth);
+router.post("/google", GoogleAuth);
 
-//exporting the created routes to use in index.js
+//exporting the created routes to use in indwx.js
 module.exports = router;
