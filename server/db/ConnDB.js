@@ -76,6 +76,10 @@ const ConnDb = async (req, res) => {
 
     //if the post table was successfully created
     console.log(`Successfully Created Table, ${process.env.DB_POSTTABLE}`);
+
+    //returning the pool for using in the controller functions
+    return pool;
+    
   } catch (error) {
     console.error("Error Connecting to DataBase")
   }

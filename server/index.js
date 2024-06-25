@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 //async await IFFE function from here
 (async () => {
   //declaring the pool with the database connection function being called
-  const pool = ConnDb();
+  const pool = await ConnDb();
 
   //passing the pool to the routes
   app.use((req, res, next) => {
