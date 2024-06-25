@@ -77,7 +77,7 @@ const ConnDb = async (req, res) => {
     //if the post table was successfully created
     console.log(`Successfully Created Table, ${process.env.DB_POSTTABLE}`);
 
-    //returning the pool for using in the controller functions
+    //returning the pool for passing querys in the controller functions
     return pool;
     
   } catch (error) {
