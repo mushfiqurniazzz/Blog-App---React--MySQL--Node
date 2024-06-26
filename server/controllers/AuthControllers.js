@@ -1,6 +1,8 @@
 //importing neccessary  libraries and functions like bcryptjs and jwt function created in the utils folder for hashing the password of90 a new user, comparing the passwords typed in for loging in and also for sending a token and then saving it in the browser localstorage using the jwt function
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs"); //for hashing
+const token = require("../utils/jwt");
 
+//async await sygn up function which will check first if any fields are null or the password matches with the cofirm password then will continue to hash the typed password by the user and finally save everything, as a success message will console log the id of the created user and send the id, email, username and created time as a json response
 const SignUp = async (req, res) => {
   //all the neccessary fields will be retrived from the req body
   const { email, username, password, confirm_password } = req.body;
@@ -77,7 +79,9 @@ const SignUp = async (req, res) => {
     );
 
     //after successfull user insertion, retrive the user details for sending the user details to the user by passing the id from the insertion
-    const [RetriveInsertedUser] = await req.pool.query(
+    const [
+      RetriveInsertedUser
+    ] = await req.pool.query(
       `SELECT id, email, username, created_at FROM \`${process.env
         .DB_AUTHTABLE}\` WHERE id = ?`,
       [InserUser.insertId]
@@ -102,8 +106,56 @@ const SignUp = async (req, res) => {
   }
 };
 
-const LogIn = async () => {
-  console.log("LogIn function was hit.");
+const LogIn = async (req, res) => {
+  //all the credentials will be retrived from the req body sent by user
+  const { username, password } = req.body;
+
+  //check if any field is null or is not provided
+  if (!username || username === "" || !password || password === "") {
+    return res.status(400).send("All Fields Are Required.");
+  }
+  try {
+    //checking if a user with a same username exists in databse
+    const [
+      CheckExistingUser
+    ] = await req.pool.query(
+      `SELECT COUNT(*) AS count FROM \`${process.env
+        .DB_AUTHTABLE}\` WHERE username = ?`,
+      [username]
+    );
+
+    //the database stores data in rows so after the filter is applied if there exists a row the below validation check would be true and we will continue with logging in the user if false return response, no user with this username exists
+    if (CheckExistingUser[0].count === 0) {
+      return res
+        .status(404)
+        .send(`No User Found With ${username} As Username.`);
+    }
+
+    const [RetriveUser] = await req.pool.query(
+      `SELECT * FROM \`${process.env.DB_AUTHTABLE}\` WHERE username = ?`,
+      [username]
+    );
+
+    //save the found user in a variable for retriving the user details for password to compare, creating the token
+    const FoundUser = RetriveUser[0];
+
+    //after the user is found with the given username now we check if the provided password matches with the password saved in database for this we use the compare function from bcrptjs which will compare the hashed password with the provided password
+    const CompareHashPassword = await bcrypt.compare(
+      password,
+      FoundUser.password
+    );
+
+    //the compare function will return false incase of error so we can write the if block like this
+    if (!CompareHashPassword) {
+      return res.status(401).send("Wrong Password! Try Again.");
+    }
+
+    //if we reach upto here we will now send the cookie to the user with their information, the cookie is located at utils directory
+    token(FoundUser, res);
+  } catch (error) {
+    //bassic error handling
+    console.error(error);
+  }
 };
 
 const LogOut = async () => {
