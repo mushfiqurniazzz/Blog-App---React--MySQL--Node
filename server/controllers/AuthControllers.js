@@ -131,6 +131,7 @@ const LogIn = async (req, res) => {
         .send(`No User Found With ${username} As Username.`);
     }
 
+    //retriving the user after knowing a user exists with the provided username
     const [RetriveUser] = await req.pool.query(
       `SELECT * FROM \`${process.env.DB_AUTHTABLE}\` WHERE username = ?`,
       [username]
