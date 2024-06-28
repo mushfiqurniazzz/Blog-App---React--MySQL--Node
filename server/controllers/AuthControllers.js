@@ -159,8 +159,17 @@ const LogIn = async (req, res) => {
   }
 };
 
-const LogOut = async () => {
-  console.log("LogOut function was hit.");
+const LogOut = (req, res) => {
+  const CheckCookieExists = req.cookies.token;
+
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First.");
+  }
+
+  res
+    .clearCookie("token", { sameSite: "none", secure: true })
+    .status(200)
+    .send("User has been logged out.");
 };
 
 const GoogleAuth = async () => {

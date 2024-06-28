@@ -17,6 +17,10 @@ require("dotenv").config();
 //port
 const port = process.env.PORT || 3000;
 
+//using the cookieparser middleware for cookie authentication
+const cookieparser = require("cookie-parser")
+app.use(cookieparser())
+
 //for cross origin resource sharing
 const cors = require("cors");
 app.use(cors());
