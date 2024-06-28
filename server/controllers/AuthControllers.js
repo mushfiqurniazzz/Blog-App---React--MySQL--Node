@@ -1,5 +1,6 @@
 //importing neccessary  libraries and functions like bcryptjs and jwt function created in the utils folder for hashing the password of90 a new user, comparing the passwords typed in for loging in and also for sending a token and then saving it in the browser localstorage using the jwt function
 const bcrypt = require("bcryptjs"); //for hashing
+const jwt = require("jsonwebtoken");
 const token = require("../utils/jwt");
 
 //async await sygn up function which will check first if any fields are null or the password matches with the cofirm password then will continue to hash the typed password by the user and finally save everything, as a success message will console log the id of the created user and send the id, email, username and created time as a json response
@@ -106,6 +107,7 @@ const SignUp = async (req, res) => {
   }
 };
 
+//async await function which will first check if the neccessary input fields are given then will check in database if user with same username exists then compares the typed password with the hashed password saved in database if everything is successful it will send a cookie marking as a loged user
 const LogIn = async (req, res) => {
   //all the credentials will be retrived from the req body sent by user
   const { username, password } = req.body;
@@ -151,6 +153,9 @@ const LogIn = async (req, res) => {
       return res.status(401).send("Wrong Password! Try Again.");
     }
 
+    //console logging in the server that a new user has been logged in
+    console.log(`A User Has Logged In, ID = ${FoundUser.id}`);
+
     //if we reach upto here we will now send the cookie to the user with their information, the cookie is located at utils directory
     token(FoundUser, res);
   } catch (error) {
@@ -159,21 +164,124 @@ const LogIn = async (req, res) => {
   }
 };
 
+//checks if the user have a token set then deletes the cookie called token from the user and sends a success code and message
 const LogOut = (req, res) => {
+  //retrive cookie called token from req.cookie
   const CheckCookieExists = req.cookies.token;
 
+  //check if the retrival was successful
   if (!CheckCookieExists) {
     return res.status(400).send("No Cookie Found, Login First.");
   }
+  try {
+    const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
+    const userId = decoded.id;
 
-  res
-    .clearCookie("token", { sameSite: "none", secure: true })
-    .status(200)
-    .send("User has been logged out.");
+    //console logging in the server that a user has logged out
+    console.log(`A User Has Logged Out, ID = ${userId}`);
+
+    //delete the cookie from the user as a res with a sucess code and message
+    res
+      .clearCookie("token", {
+        sameSite: "none",
+        secure: true
+      })
+      .status(200)
+      .send("User has been logged out.");
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-const GoogleAuth = async () => {
-  console.log("GoogleAuth function was hit.");
+//async await function for using the firebase email authentication which will, during signup will save the email recieved from the frontend firebase pop up and generate a random password and before saving it with email and password and for username would pick up all the characters untill @, during login will send a cookie to that user if the email got matches the one saved in database
+const GoogleAuth = async (req, res) => {
+  //used email in firebase will be sent from frontend
+  const { email } = req.body;
+
+  //if any field is null or is empty return a error message
+  if (!email || email === "") {
+    return res.status(400).send("Error Using Firebase, Try Again.");
+  }
+
+  //using try catch blocks for using await
+  try {
+    //if the user with same email is in the database send a cookie as the user has already loged in else create the user and then save the user
+
+    //check if a user exists with the same email
+    const [
+      CheckUserExists
+    ] = await req.pool.query(
+      `SELECT COUNT(*) AS count FROM \`${process.env
+        .DB_AUTHTABLE}\`  WHERE email = ?`,
+      [email]
+    );
+
+    //if exists send a token to that user
+    if (CheckUserExists[0].count > 0) {
+      const [RetriveUser] = await req.pool.query(
+        `SELECT * FROM \`${process.env.DB_AUTHTABLE}\` WHERE email = ?`,
+        [email]
+      );
+      //cannot directly pass a row to the token so saving it in a variable before passing it
+      const FoundUser = RetriveUser[0];
+
+      //console logging in the server that a user has logged in using firebase
+      console.log(`A User Has Logged In Using Firebase, ID = ${FoundUser.id}`);
+
+      //passing the user
+      token(FoundUser, res);
+    }
+
+    //else case, if the user didnt exist
+
+    //creating the username field
+    const username = email.substring(0, email.indexOf("@"));
+
+    //creating the password, as we dont get any passwords provided from firebase
+    const password =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+
+    //for hashing the typed password before saving it using bcryptjs which is used for hashing using salt
+    const salt = await bcrypt.genSalt(10); //10 rounds of salt
+
+    //hashing the password
+    const HashedPassword = await bcrypt.hash(password, salt);
+
+    //saving the user with email, username and hashed password
+    const [InsertUser] = await req.pool.query(
+      `INSERT INTO \`${process.env
+        .DB_AUTHTABLE}\` (email, username, password) VALUES (?, ?, ?)`,
+      [email, username, HashedPassword]
+    );
+
+    //retriving the user for sending a success message
+    const [
+      RetriveInsertedUser
+    ] = await req.pool.query(
+      `SELECT id, email, username, created_at FROM \`${process.env
+        .DB_AUTHTABLE}\` WHERE id = ?`,
+      [InsertUser.insertId]
+    );
+
+    //declaring the retrived user object as a variable
+    const InsertedUser = RetriveInsertedUser[0];
+
+    //console logging in the server that a user has been created using firebase
+    console.log(`A User Has Been Created Using Firebase, ID = ${InsertedUser.id}`);
+
+    //sending the created user details to the server
+    return res.status(201).json({
+      id: InsertedUser.id,
+      username: InsertedUser.username,
+      email: InsertedUser.email,
+      created_at: InsertedUser.created_at
+    });
+  } catch (error) {
+    //basic error handling during error
+    console.error(error);
+  }
 };
 
+//exporting the auth functions
 module.exports = { SignUp, LogIn, LogOut, GoogleAuth };
