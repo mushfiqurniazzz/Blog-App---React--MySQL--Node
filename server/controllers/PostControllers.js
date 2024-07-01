@@ -106,8 +106,15 @@ const AddPost = async (req, res) => {
   }
 };
 
-const GetPosts = async () => {
-  console.log("GetPosts function was hit.");
+//this async await function will be a get request function which will be called on reload of the frontend and set posts for the user
+const GetPosts = async (req, res) => {
+  //first select all the posts from the database and then send it to the user as a json object
+  const [SelectAllPosts] = await req.pool.query(
+    `SELECT * FROM \`${process.env.DB_POSTTABLE}\``
+  );
+
+  //return the json object back to the user
+  return res.status(200).json(SelectAllPosts);
 };
 
 const GetPost = async () => {
