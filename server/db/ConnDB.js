@@ -64,6 +64,7 @@ const ConnDb = async (req, res) => {
         author_id INT,
         post_title VARCHAR(250) NOT NULL,
         post_body TEXT NOT NULL,
+        post_image VARCHAR(500) DEFAULT 'https://res.cloudinary.com/dtag9ifxy/image/upload/v1719747758/images.png',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (author_id) REFERENCES \`${process.env.DB_AUTHTABLE}\` (id)
       )`
@@ -79,9 +80,9 @@ const ConnDb = async (req, res) => {
 
     //returning the pool for passing querys in the controller functions
     return pool;
-    
   } catch (error) {
-    console.error("Error Connecting to DataBase")
+    //basic error handling incase of error
+    console.error(error);
   }
 };
 
