@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 //function for uploading to cloudinary
 const cloudinary = require("../utils/cloudinary");
 
-//async await add post function which will first check if a cookie called token exists then extract the user id from the cookie, will check if all the credentials are given and then after converting the image given to clloudinary will save the whole thing in the database
+//async await add post function which will first check if a cookie called token exists then extract the user id from the cookie, will check if all the credentials are given and then after converting the image given to cloudinary will save the whole thing in the database
 const AddPost = async (req, res) => {
   //check if the user is athenticated and retrive the id from the cookie called token which would be set in the user's localstorage after successful login
   const CheckCookieExists = req.cookies.token;
