@@ -117,8 +117,54 @@ const GetPosts = async (req, res) => {
   return res.status(200).json(SelectAllPosts);
 };
 
-const GetPost = async () => {
-  console.log("GetPost function was hit.");
+//async await function which will first check if a token exists in the user end then checks if a post exists with the provided id from req.params.id ifexists sends the row with a success message
+const GetPost = async (req, res) => {
+  //check if cookie exists
+  const CheckCookieExists = req.cookies.token;
+
+  //if no cookie exists
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First");
+  }
+
+  //retrive id from req params
+  const id  = req.params.id;
+
+  //check if id was recieved
+  if (!id || id === "") {
+    return res.status(400).send("ID Was Not Found");
+  }
+
+  try {
+    //await query for checking is post exists with provided id
+    const [
+      CheckPostExists
+    ] = await req.pool.query(
+      `SELECT COUNT(*) AS count FROM \`${process.env
+        .DB_POSTTABLE}\` WHERE post_id = ?`,
+      [id]
+    );
+
+    //if theres no post
+    if (CheckPostExists[0].count === 0) {
+      return res.status(404).send(`No Post Found With ID = ${id}`);
+    }
+
+    //retrive post from database
+    const [RetrivePost] = await req.pool.query(
+      `SELECT * FROM \`${process.env.DB_POSTTABLE}\` WHERE post_id = ?`,
+      [id]
+    );
+
+    //save the retrieved post object in a variable for accessing the object's value easily
+    const FoundPost = RetrivePost[0];
+
+    //send the object to the user
+    res.status(200).json(FoundPost);
+  } catch (error) {
+    //basic error handling in case of error
+    console.error(error);
+  }
 };
 
 const DeletePost = async () => {
