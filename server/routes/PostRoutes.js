@@ -29,7 +29,7 @@ router.post("/addpost", upload.single("image"), AddPost);
 router.delete("/:id", DeletePost);
 
 //the updatePost function will be a put req as e try to update a post from the user's end to the server's end to update post
-router.put("/:id", UpdatePost);
+router.put("/:id", upload.single("image"), UpdatePost);
 
 //exporting the created routes to use in index.js
 module.exports = router;

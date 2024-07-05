@@ -222,8 +222,87 @@ const DeletePost = async (req, res) => {
   }
 };
 
-const UpdatePost = async () => {
-  console.log("UpdatePost function was hit.");
+//async await post update function which will first check if the user is logged in and then retrive the user id from the cookie and will procced check if the retrieved id is the auther of the post the user wants to update if successful will send the success message
+const UpdatePost = async (req, res) => {
+  //retrieve the cookie called token from the req
+  const CheckCookieExists = req.cookies.token;
+
+  //check if the user has the token
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First.");
+  }
+
+  //the post id which will be retrieved from the url
+  const id = req.params.id;
+
+  //check if the user send a id
+  if (!id || id === "") {
+    return res.status(400).send("ID Was Not Found.");
+  }
+
+  //the fields which will be recieved from the req body
+  const { post_title, post_body } = req.body;
+
+  //check if all the fields are recieved
+  if (!post_title || post_title === "" || !post_body || post_body === "") {
+    return res.status(400).send("All Fields Are Required.");
+  }
+
+  //try catch block for helpful error handling and maintainability
+  try {
+    //decoding and storing the user id from cookie called token
+    const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
+    const UserId = decoded.id;
+
+    //check if the user id matches with the post author's id
+    const [
+      CheckIfIdMatches
+    ] = await req.pool.query(
+      `SELECT COUNT(*) AS count FROM \`${process.env
+        .DB_POSTTABLE}\` WHERE author_id = ? AND post_id = ?`,
+      [UserId, id]
+    );
+
+    //check if the specific post has auther being the user retrieved from the cookie
+    if (CheckIfIdMatches[0].count === 0) {
+      return res.status(400).send("You Aren't The Author, Can't Update Post.");
+    }
+
+    //console logging that a user has updated a post
+    console.log(`Post = ${id} Was Updated By User = ${UserId}`);
+
+    //if a file is passed to update the image of a blog post
+    if (req.file) {
+      //call the uploader function and pass the path of the file
+      const result = await cloudinary.uploader.upload(req.file.path);
+
+      //after it's completed save the secure url in a variable
+      const ImageUrl = result.secure_url;
+
+      //update the post after the author id and id from cookie matches with the cloudinary image url
+      const [UpdatePost] = await req.pool.query(
+        `UPDATE \`${process.env
+          .DB_POSTTABLE}\` SET post_title = ?, post_body = ?, post_image = ?`,
+        [post_title, post_body, ImageUrl]
+      );
+
+      //send a success message
+      return res.status(200).json(UpdatePost);
+    } else {
+      //update the post after the author id and id from cookie matches
+      const [UpdatePost] = await req.pool.query(
+        `UPDATE \`${process.env
+          .DB_POSTTABLE}\` SET post_title = ?, post_body = ?`,
+        [post_title, post_body]
+      );
+
+      //send a success message
+      return res.status(200).json(UpdatePost);
+    }
+  } catch (error) {
+    //basic error handling in case of error
+    console.log(error);
+  }
 };
 
 module.exports = { AddPost, GetPosts, GetPost, DeletePost, UpdatePost };
