@@ -6,7 +6,7 @@ const app = express();
 //importing routes from the routes folder
 const AuthRoutes = require("./routes/AuthRoutes");
 const PostRoutes = require("./routes/PostRoutes");
-// const UserRoutes = require("./routes/UsersRoutes");
+const UserRoutes = require("./routes/UsersRoutes");
 
 //databse connection function
 const ConnDb = require("./db/ConnDB");
@@ -45,7 +45,7 @@ app.use(bodyParser.json());
   //declaring routes in this IFFE function
   app.use("/auth", AuthRoutes);
   app.use("/post", PostRoutes);
-  // app.use("/users", UserRoutes);
+  app.use("/user", UserRoutes);
 
   //listening the app at environemental variable specfified port
   app.listen(port, () => {
