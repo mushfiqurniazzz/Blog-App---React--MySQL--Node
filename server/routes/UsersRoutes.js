@@ -15,7 +15,7 @@ const {
 router.post("/:id", SearchUser);
 
 //the GetUsers function will get a list of a few users and then send as a json object back to the user
-router.get("/:id", GetUsers);
+router.get("/", GetUsers);
 
 //the UpdateUser function will update a user and then send a json object to the user about the updated email
 router.put("/:id", UpdateUser);
