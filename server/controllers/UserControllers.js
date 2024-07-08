@@ -318,7 +318,71 @@ const ChangePassword = async (req, res) => {
     console.error(error);
   }
 };
-const DeleteUser = async () => {};
+
+//DeleteUser asyn await function will first check if the id in cookie matches with the req params id then will remove the cookie and delete the user from database
+const DeleteUser = async (req, res) => {
+  //check if the cookie called token exists
+  const CheckCookieExists = req.cookies.token;
+
+  //if not id found end the function with a error message
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First.");
+  }
+
+  //check if the user provided the id of the user to  be deleted
+  const id = req.params.id;
+
+  //if the user didn't provide any id, end function with a error message
+  if (!id || id === "") {
+    return res.status(400).send("ID Was Not Provided In Req Params.");
+  }
+
+  //after checks now we continue with the deletion of the user with the posts posted by the user in the post table
+  try {
+    //check if the id in cookie matches with the id in the provided req params
+    const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
+    const UserId = decoded.id;
+
+    //if the ids of the cookie and req params doesnt match
+    if (UserId != id) {
+      return res
+        .status(400)
+        .send("You Are Not Authorized To Delete This User.");
+    }
+
+    //after completing all the checks up untill here now we use a await query to delete all items in auth table then post table
+
+    //delete the row where the id is the retrieved userid
+    const [DeleteAuthUser] = await req.pool.query(
+      `DELETE FROM \`${process.env.DB_AUTHTABLE}\` WHERE id = ?`,
+      [UserId]
+    );
+
+    //delete all the row where the author id is the retrieved userid
+    const [DeletePostUser] = await req.pool.query(
+      `DELETE FROM \`${process.env.DB_POSTTABLE}\` WHERE author_id = ?`,
+      [UserId]
+    );
+
+    //console logging that a user has been deleted
+    console.log(`User = ${UserId} Was Deleted.`);
+
+    //return a success message that the user been deleted and distroy the cookie from the user
+    return res
+      .clearCookie("token", {
+        sameSite: "none",
+        secure: true
+      })
+      .status(200)
+      .json({
+        msg: "User Has Been Deleted",
+        id: UserId
+      });
+  } catch (error) {
+    //basic error  handler in case of error
+    console.error(error);
+  }
+};
 
 module.exports = {
   SearchUser,
