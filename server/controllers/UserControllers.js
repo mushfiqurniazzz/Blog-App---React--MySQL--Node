@@ -206,6 +206,124 @@ const UpdateUser = async (req, res) => {
     console.error(error);
   }
 };
+
+//this async await ChangePassword functioon will first check if the cookie matches with the user who wants to change the password if successfull will procced to update the password with provided credentials in the data base
+const ChangePassword = async (req, res) => {
+  //check if cookie is there
+  const CheckCookieExists = req.cookies.token;
+
+  //if the cookie is not there in the user
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First");
+  }
+
+  //check if the id for updating the user is provided in the req params
+  const id = req.params.id;
+
+  //in case the id was not provided in req params
+  if (!id || id === "") {
+    return res.status(400).send("ID Was not Found.");
+  }
+
+  //fields for updating the user which will be retrieved from the req body
+  const { old_password, new_password, confirm_new_password } = req.body;
+
+  //check if the fields are provided and is not null
+  if (
+    !old_password ||
+    old_password === "" ||
+    !new_password ||
+    new_password === "" ||
+    !confirm_new_password ||
+    confirm_new_password === ""
+  ) {
+    //return error response in case of error
+    return res.status(400).send("ALL Fields Are Required.");
+  }
+
+  //check if the new password and confirm new passwords matchs
+  if (new_password != confirm_new_password) {
+    return res
+      .status(400)
+      .send("Confirm Password And Confirm New Password Doesn't Match.");
+  }
+
+  //try catch block for helpful error handling and maintainability
+  try {
+    //check if the id in the cookie matches with the id in req params
+    const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
+    const UserId = decoded.id;
+
+    // if the id in the cookie does not match with the id in req params
+    if (UserId != id) {
+      return res
+        .status(400)
+        .send("You Are Not The User You Are Trying To Update.");
+    }
+
+    //check if a user exists with the provided user using await query
+    const [
+      CheckUserExists
+    ] = await req.pool.query(
+      `SELECT COUNT(*) AS count FROM \`${process.env
+        .DB_AUTHTABLE}\` WHERE id = ?`,
+      [id]
+    );
+
+    //check if a user exists with the id
+    if (CheckUserExists[0] === 0) {
+      return res.status(400).send(`No User Found With Provided Id`);
+    }
+
+    //check if the typed password and the hashed password saved on the database is correct by using a bcrypt inbuilt function for comparing hashed password
+    const [RetrieveUser] = await req.pool.query(
+      `SELECT * FROM \`${process.env.DB_AUTHTABLE}\` WHERE id = ?`,
+      [id]
+    );
+
+    //save the user object in a variable
+    const FoundUser = RetrieveUser[0];
+
+    //check using the bcrypt compare function
+    const CompareHashedPassword = await bcrypt.compare(
+      old_password,
+      FoundUser.password
+    );
+
+    //if the comparasion of the hashed password was not successful
+    if (!CompareHashedPassword) {
+      return res.status(400).send("Wrong Password! Try Again.");
+    }
+
+    //after all checks we will now update the user with password but first we need to hash the password before saving it, for hashing the typed password before saving it using bcryptjs which is used for hashing using salt
+    const salt = await bcrypt.genSalt(10); //10 rounds of salt
+
+    //hashing the password
+    const HashedPassword = await bcrypt.hash(new_password, salt);
+
+    const [UpdateUser] = await req.pool.query(
+      `UPDATE \`${process.env.DB_AUTHTABLE}\` SET password = ? where id = ?`,
+      [HashedPassword, id]
+    );
+
+    //send a success message that a user has been updated after successful operation, no need to select from or retrieve once again from the db as the typed or provided credentials would be the same as the stored onne
+    return res.status(200).json({
+      msg: "User Password Updated Successfuly",
+      id: id,
+      email: FoundUser.email,
+      username: FoundUser.username
+    });
+  } catch (error) {
+    //basic error handler incase of error
+    console.error(error);
+  }
+};
 const DeleteUser = async () => {};
 
-module.exports = { SearchUser, GetUsers, UpdateUser, DeleteUser };
+module.exports = {
+  SearchUser,
+  GetUsers,
+  UpdateUser,
+  ChangePassword,
+  DeleteUser
+};
