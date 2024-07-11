@@ -1,9 +1,9 @@
 import React from 'react'
 
-const CheckUserPage = () => {
+const UpdateUserInfo = () => {
   return (
-    <div>CheckUserPage</div>
+    <div>UpdateUserInfo</div>
   )
 }
 
-export default CheckUserPage
+export default UpdateUserInfo
