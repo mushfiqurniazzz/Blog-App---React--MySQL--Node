@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 
 //async await SearchUser function will take id from req params and check if a user exists with that id then will send the user object which would include information like email, username, total posts
 const SearchUser = async (req, res) => {
-  //retrive id from rew params
-  const id = req.params.id;
+  //retrive id from req body
+  const id = req.body.id;
 
   //if no id was provided
   if (!id || id === "") {
