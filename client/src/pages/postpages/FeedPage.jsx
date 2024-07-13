@@ -1,5 +1,5 @@
-//importing use state, use effect for use state variable and for mounting a function
-import { useState, useEffect } from "react";
+//importing use state, use effect and useRef for use of state variable, for mounting a function and to check if the users has been fetched
+import { useState, useEffect, useRef } from "react";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 //importing axios for sending get request
@@ -15,6 +15,9 @@ const FeedPage = () => {
 
   //use state variable for setting the data
   const [postdata, setPostData] = useState([]);
+
+  //marking the has fetched data as false
+  const hasFetchedPostData = useRef(false);
 
   //max length after which the character of post body will be "..."
   const maxLength = 70;
@@ -65,8 +68,12 @@ const FeedPage = () => {
         //declare the data as the value of use state variable data
         setPostData(data);
 
-        //send a toast notification that users has been successfuly fetched
-        toast.success("Users has been fetched.");
+        //using the useRef current which is the same as initialized untill changes
+        if (!hasFetchedPostData.current) {
+          //send a toast notification that users has been successfuly fetched
+          toast.success("Users has been fetched.");
+          hasFetchedPostData.current = true; // set the ref to true after first fetch
+        }
       } catch (error) {
         //basic error handling in case of error
         console.error(error);
@@ -118,7 +125,7 @@ const FeedPage = () => {
       </div>
       <Footer />
       <>
-      {/* the modal which will be called when the user has no cookie*/}
+        {/* the modal which will be called when the user has no cookie*/}
         <button
           id="nocookieexistsmodalbutton"
           type="button"
