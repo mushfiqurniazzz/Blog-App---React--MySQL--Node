@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
+import styles from "../styles/Footer.module.css";
 
 const Footer = () => {
   return (
-    <div>Footer</div>
-  )
-}
+    <>
+      <footer>
+        <div className={styles.footercontainer}>
+          <p>&copy; 2024 Blog App. All rights reserved.</p>
+        </div>
+      </footer>
+    </>
+  );
+};
 
-export default Footer
+export default Footer;

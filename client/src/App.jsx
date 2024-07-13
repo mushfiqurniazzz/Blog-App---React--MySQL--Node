@@ -1,6 +1,4 @@
-import React from "react";
-import NavBar from "./components/NavBar";
-import "./styles/App.css";
+//importing toaster from sonner to configure the toast notfications, BrowserRouter, Route, Routes from react router dom to create navigation between pages and the pages to be showen to the user on a specific page
 import { Toaster } from "sonner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUpPage from "./pages/authpages/SignUpPage";
@@ -16,12 +14,12 @@ import UserProfile from "./pages/userpages/UserProfile";
 import UpdateUserInfo from "./pages/userpages/UpdateUserInfo";
 import DeleteUser from "./pages/userpages/DeleteUser";
 
+//app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
   return (
     <>
       <BrowserRouter>
         <Toaster duration={2000} position="top-center" richColors closeButton />
-        <NavBar />
         <Routes>
           {/* auth pages */}
           <Route path="/signup" element={<SignUpPage />} />
@@ -45,4 +43,5 @@ const App = () => {
   );
 };
 
+//exporting the app controller function to main.jsx which will manipulate the dom using this componenets router configuaration
 export default App;

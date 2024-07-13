@@ -1,0 +1,58 @@
+.PostsBody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+}
+
+#card {
+  display: flex;
+  margin: 3rem !important;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; 
+}
+
+#image {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+#card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.nocookieexistsmodalbutton{
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #card {
+    margin: 0rem !important; 
+      text-align: center;
+
+  }
+  .PostsBody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 5 0rem;
+  padding: 0rem;
+}
+#image {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+}
