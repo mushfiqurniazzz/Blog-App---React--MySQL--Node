@@ -1,19 +1,25 @@
+//importing use state, use effect for use state variable and for mounting a function
 import { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
+//importing axios for sending get request
 import axios from "axios";
+//for sending toast notifications to the user
 import { toast } from "sonner";
 import styles from "../../styles/FeedPage.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+//main component function which will first send a get request and show the posts in the ui and when a user click to read more a auth will take pplace and will send the user to login or will send to the post information page
 const FeedPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //declaring useVavigate as navigate
 
   //use state variable for setting the data
   const [postdata, setPostData] = useState([]);
 
+  //max length after which the character of post body will be "..."
   const maxLength = 70;
 
+  //function to shorten the text of posts recieved from the get request
   const truncateText = (text, maxLength) => {
     if (text.length > maxLength) {
       return text.substring(0, maxLength) + "...";
@@ -22,24 +28,30 @@ const FeedPage = () => {
     }
   };
 
-  //function to check if a user clicking read more is authenticated or not
+  //function to check if a user clicking read more is authenticated or not, if not will call a modal and ask user to login
   const CheckAuthReadMore = (id) => {
     //check if the user has a cookie called token in their localstorage
     const CheckCookieExists = localStorage.getItem("token");
 
+    //if user has no cookie will call the modal
     if (!CheckCookieExists) {
       return document.getElementById("nocookieexistsmodalbutton").click();
     }
 
+    //if the user has the cookie forward the user to this url
     navigate(`/postinfo/:${id}`);
   };
 
+  //this button is used to closs the modal when the user clicks on the login button
   const LoginButtonModal = () => {
+    //closses the modal button
     document.getElementById("nocookieexistsmodalbutton").click();
 
+    //after modal is clossed now navigate the user to login
     navigate("/login");
   };
 
+  //use effect function takes a function as a parameter which is called when the ui is mounted
   useEffect(() => {
     //async await function for fetching the posts from the server using axios and then setting the data in a usestate variable
     const FetchPosts = async () => {
@@ -56,21 +68,24 @@ const FeedPage = () => {
         //send a toast notification that users has been successfuly fetched
         toast.success("Users has been fetched.");
       } catch (error) {
+        //basic error handling in case of error
         console.error(error);
         toast.error("Error fetching posts.");
       }
     };
 
-    FetchPosts();
+    FetchPosts(); //calling the function
   }, []);
 
   return (
     <>
       <NavBar />
       <div className={styles.PostsBody}>
+        {/* if the data recieved has no posts */}
         {postdata.length === 0 ? (
           <h1>No blog posts in database.</h1>
         ) : (
+          // seperate the data and display them on the ui
           postdata.map((post) => (
             <div
               className="card"
@@ -103,6 +118,7 @@ const FeedPage = () => {
       </div>
       <Footer />
       <>
+      {/* the modal which will be called when the user has no cookie*/}
         <button
           id="nocookieexistsmodalbutton"
           type="button"
@@ -159,4 +175,5 @@ const FeedPage = () => {
   );
 };
 
+//exporting the feed page functional componenet
 export default FeedPage;
