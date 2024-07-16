@@ -23,6 +23,7 @@ app.use(cookieparser());
 
 //for cross origin resource sharing
 const cors = require("cors");
+//using cors with changing config which will only allow resource sharing with the frontend
 app.use(
   cors({
     origin: "http://localhost:5173", // client origin
