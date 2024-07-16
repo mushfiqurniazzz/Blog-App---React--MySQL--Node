@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "nstart": "nodemon index.js",
-    "start": "index.js",
+    "start": "node index.js",
     "DEBUGSTART": "DEBUG=express* nodemon index.js"
   },
   "author": "",
