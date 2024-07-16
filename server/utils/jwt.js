@@ -18,7 +18,7 @@ const token = (FoundUser, res) => {
 
   // set the token as a cookie in the response headers
   res.cookie("token", jwtToken, {
-    httpOnly: true, // this prevents client-side JavaScript from accessing the cookie
+    httpOnly: false, // this alows client-side JavaScript for accessing the cookie
     maxAge: 30 * 24 * 60 * 60 * 1000 // ensures the cookie expires in 30 days
   });
 

@@ -18,12 +18,19 @@ require("dotenv").config();
 const port = process.env.PORT || 3000;
 
 //using the cookieparser middleware for cookie authentication
-const cookieparser = require("cookie-parser")
-app.use(cookieparser())
+const cookieparser = require("cookie-parser");
+app.use(cookieparser());
 
 //for cross origin resource sharing
 const cors = require("cors");
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // client origin
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+    credentials: true // for sending cookies and HTTP authentication information
+  })
+);
 console.log("Cross Origin Resource Sharing is enabled.");
 
 //body parsing middlewares
