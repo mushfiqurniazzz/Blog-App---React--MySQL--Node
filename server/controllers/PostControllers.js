@@ -67,39 +67,39 @@ const AddPost = async (req, res) => {
         post_title: InsertedPost.post_title,
         post_image: InsertedPost.post_image
       });
+    } else {
+      //else case where the user doesnt have any image for the blog
+      //save the retrived userid from cookie, cloudinary secure url post title and post body into the database
+      const [AddPost] = await req.pool.query(
+        `INSERT INTO \`${process.env
+          .DB_POSTTABLE}\` (author_id, post_title, post_body) VALUES (?, ?, ?)`,
+        [UserId, post_title, post_body]
+      );
+
+      //retrive the inserted post for sending a success message to the user
+      const [
+        RetriveInsertedPost
+      ] = await req.pool.query(
+        `SELECT post_id, author_id, post_title, post_image FROM \`${process.env
+          .DB_POSTTABLE}\` WHERE post_id = ?`,
+        [AddPost.insertId]
+      );
+      //declaring the retrived post object in a variable
+      const InsertedPost = RetriveInsertedPost[0];
+
+      //console logging the server that a new post has been posted
+      console.log(
+        `A New Post, ID = ${InsertedPost.post_id} Has Been Posted By User = ${InsertedPost.author_id}.`
+      );
+
+      //sending a success message to the user that the post has been created
+      res.status(201).json({
+        post_id: InsertedPost.post_id,
+        author_id: InsertedPost.author_id,
+        post_title: InsertedPost.post_title,
+        post_image: InsertedPost.post_image
+      });
     }
-
-    //else case where the user doesnt have any image for the blog
-    //save the retrived userid from cookie, cloudinary secure url post title and post body into the database
-    const [AddPost] = await req.pool.query(
-      `INSERT INTO \`${process.env
-        .DB_POSTTABLE}\` (author_id, post_title, post_body) VALUES (?, ?, ?)`,
-      [UserId, post_title, post_body]
-    );
-
-    //retrive the inserted post for sending a success message to the user
-    const [
-      RetriveInsertedPost
-    ] = await req.pool.query(
-      `SELECT post_id, author_id, post_title, post_image FROM \`${process.env
-        .DB_POSTTABLE}\` WHERE post_id = ?`,
-      [AddPost.insertId]
-    );
-    //declaring the retrived post object in a variable
-    const InsertedPost = RetriveInsertedPost[0];
-
-    //console logging the server that a new post has been posted
-    console.log(
-      `A New Post, ID = ${InsertedPost.post_id} Has Been Posted By User = ${InsertedPost.author_id}.`
-    );
-
-    //sending a success message to the user that the post has been created
-    res.status(201).json({
-      post_id: InsertedPost.post_id,
-      author_id: InsertedPost.author_id,
-      post_title: InsertedPost.post_title,
-      post_image: InsertedPost.post_image
-    });
   } catch (error) {
     //basic error handling in case of error
     console.error(error);
