@@ -1,0 +1,23 @@
+.formparent {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.form {
+  padding: 1rem;
+  width: 35rem;
+  border: 2px solid black;
+  background-color: #f8f9fa;
+  border-radius: 2%;
+}
+.form h3 {
+  margin: 1rem;
+  text-align: center;
+}
+#formfooterbutton {
+  margin-left: 13.5rem;
+}
+.cannotpost {
+  height: 100vh;
+}
