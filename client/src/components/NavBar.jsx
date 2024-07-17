@@ -16,6 +16,9 @@ import { Link } from "react-router-dom";
 //importing toast from sonner for pushing toast notifications to indicate success, error and warnings
 import { toast } from "sonner";
 
+//js-cookie library makes it easy to retrieve or set cokies from the frontend for the user
+import Cookies from "js-cookie";
+
 //react arrow functiom componenet called nav bar which will be used in all the pages
 const NavBar = () => {
   //use state empty string  on id input fields for depecting null
@@ -25,7 +28,7 @@ const NavBar = () => {
   const [userdata, setUserdata] = useState(null);
 
   //check if there's a cookie exisiting in the localstorage of the user which will be saved during the log in proccess, if theres no cookie render the nav bar in a specific way using the conditonal statements
-  const CheckCookieExists = localStorage.getItem("token");
+  const CheckCookieExists = Cookies.get("token");
 
   //function for sending a req to the server and then show the result using a modal
   const FetchUser = async (e) => {
@@ -123,34 +126,29 @@ const NavBar = () => {
 
               {/* conditional rendering in react, do not render the create post if no cookie is found*/}
               {CheckCookieExists ? (
-                <li className="nav-item">
-                  <Link
-                    className="nav-link active"
-                    aria-current="page"
-                    to="createpost"
-                  >
-                    Create Post
-                  </Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link active"
+                      aria-current="page"
+                      to="createpost"
+                    >
+                      Create Post
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link active"
+                      aria-current="page"
+                      to="/userprofile"
+                    >
+                      User Profile
+                    </Link>
+                  </li>
+                </>
               ) : (
                 ""
               )}
-
-              {/* conditional rendering in react, do not render the user profile if no cookie is found*/}
-              {CheckCookieExists ? (
-                <li className="nav-item">
-                  <Link
-                    className="nav-link active"
-                    aria-current="page"
-                    to="/userprofile"
-                  >
-                    User Profile
-                  </Link>
-                </li>
-              ) : (
-                ""
-              )}
-
               <li className="nav-item">
                 <Link
                   className="nav-link active"

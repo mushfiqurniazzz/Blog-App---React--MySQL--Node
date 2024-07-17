@@ -8,6 +8,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import styles from "../../styles/FeedPage.module.css";
 import { useNavigate } from "react-router-dom";
+//js-cookie library makes it easy to retrieve or set cokies from the frontend for the user
+import Cookies from "js-cookie";
 
 //main component function which will first send a get request and show the posts in the ui and when a user click to read more a auth will take pplace and will send the user to login or will send to the post information page
 const FeedPage = () => {
@@ -34,7 +36,7 @@ const FeedPage = () => {
   //function to check if a user clicking read more is authenticated or not, if not will call a modal and ask user to login
   const CheckAuthReadMore = (id) => {
     //check if the user has a cookie called token in their localstorage
-    const CheckCookieExists = localStorage.getItem("token");
+    const CheckCookieExists = Cookies.get("token");
 
     //if user has no cookie will call the modal
     if (!CheckCookieExists) {
@@ -90,7 +92,7 @@ const FeedPage = () => {
       <div className={styles.PostsBody}>
         {/* if the data recieved has no posts */}
         {postdata.length === 0 ? (
-          <h1>No blog posts in database.</h1>
+          <h1 className={styles.nopostfound}>No blog posts in database.</h1>
         ) : (
           // seperate the data and display them on the ui
           postdata.map((post) => (
