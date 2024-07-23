@@ -90,6 +90,7 @@ const NavBar = () => {
             <img
               // use the imported logo image
               src={LogoImg}
+              id={styles.img}
               width="60"
               height="60"
               alt="logo of blog app website"
