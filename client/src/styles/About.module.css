@@ -1,0 +1,18 @@
+#cardbody {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+
+#card {
+  height: 75vh;
+  width: 70rem;
+  margin: 3rem;
+}
+#mb3 {
+  text-align: center;
+}
+
+#mb3 p {
+  padding: 1rem;
+}
