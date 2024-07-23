@@ -384,10 +384,54 @@ const DeleteUser = async (req, res) => {
   }
 };
 
+//UserProfile async await function which will first look for the cookie stored in the user and then retrieve the id and then will reteve all credentials like email username from the cookie and send back to the user with total posts count as well
+const UserProfile = async (req, res) => {
+  //get hold of the cookie called token using a variable
+  const CheckCookieExists = req.cookies.token;
+
+  //return error if the cookie doesnt exist
+  if (!CheckCookieExists) {
+    return res.status(400).send("No Cookie Found, Login First.");
+  }
+
+  //decode the cookie using jsonwebtoken and use the id to retrieve credentials from the database
+  const decoded = await jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
+  const UserId = decoded.id;
+
+  //retrieve the credentials from database using the userid variable which holds the specefic user id
+  const [
+    RetrieveFromAuth
+  ] = await req.pool.query(
+    `SELECT email, username, created_at FROM \`${process.env.DB_AUTHTABLE}\` WHERE id =?`,
+    [UserId]
+  );
+
+  //declare the first row of retrieved information in a vaiable for easy retreval
+  const UserAuthInfo = RetrieveFromAuth[0];
+
+  //retrieve the total amount of posts made by the user in the database
+  const [
+    RetrieveFromPost
+  ] = await req.pool.query(
+    `SELECT COUNT(*) AS count FROM \`${process.env.DB_POSTTABLE}\` WHERE author_id = ?`,
+    [UserId]
+  );
+
+  //return the data in a json objectw ith a success code
+  res.status(200).json({
+    id: UserId,
+    email: UserAuthInfo.email,
+    username: UserAuthInfo.username,
+    created_at: UserAuthInfo.created_at,
+    totalposts: RetrieveFromPost[0].count
+  });
+};
+
 module.exports = {
   SearchUser,
   GetUsers,
   UpdateUser,
   ChangePassword,
-  DeleteUser
+  DeleteUser,
+  UserProfile
 };

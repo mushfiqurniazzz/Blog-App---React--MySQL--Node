@@ -9,11 +9,15 @@ const {
   GetUsers,
   UpdateUser,
   ChangePassword,
-  DeleteUser
+  DeleteUser,
+  UserProfile
 } = require("../controllers/UserControllers");
 
 //the SearchUser function will search a user and send a json object to the user
 router.post("/:id", SearchUser);
+
+//the UserProfile will look for a cookie then will retieve the id and then will retieve and send the users credentials
+router.get("/userprofile", UserProfile);
 
 //the GetUsers function will get a list of a few users and then send as a json object back to the user
 router.get("/", GetUsers);
