@@ -1,0 +1,23 @@
+#parentcard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  height: 100%;
+}
+.nopostfoundbody {
+  height: 100vh;
+}
+#card {
+  display: flex;
+  margin: 3rem !important;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
