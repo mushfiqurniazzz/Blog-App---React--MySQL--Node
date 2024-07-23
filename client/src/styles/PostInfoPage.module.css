@@ -1,0 +1,10 @@
+.parentdiv {
+  height: 100vh;
+  width: 70%;
+}
+.parentdiv h1 {
+  margin: 3rem;
+}
+#Link {
+  margin-left: 3rem;
+}

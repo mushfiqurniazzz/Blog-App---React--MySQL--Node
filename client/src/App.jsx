@@ -9,10 +9,7 @@ import PostInfoPage from "./pages/postpages/PostInfoPage";
 import About from "./pages/About";
 import FourOFourPage from "./pages/FourOFourPage";
 import FamousAuthors from "./pages/userpages/FamousAuthors";
-import SearchUser from "./pages/userpages/SearchUser";
 import UserProfile from "./pages/userpages/UserProfile";
-import UpdateUserInfo from "./pages/userpages/UpdateUserInfo";
-import DeleteUser from "./pages/userpages/DeleteUser";
 
 //app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
@@ -30,10 +27,7 @@ const App = () => {
           <Route path="/postinfo/:id" element={<PostInfoPage />} />
           {/* user pages */}
           <Route path="/famousauthors" element={<FamousAuthors />} />
-          <Route path="/searchuser" element={<SearchUser />} />
           <Route path="/userprofile" element={<UserProfile />} />
-          <Route path="/updateuser" element={<UpdateUserInfo />} />
-          <Route path="/deleteuser" element={<DeleteUser />} />
           {/* others */}
           <Route path="/about" element={<About />} />
           <Route path="*" element={<FourOFourPage />} />

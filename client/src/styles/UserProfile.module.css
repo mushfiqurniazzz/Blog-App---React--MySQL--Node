@@ -1,0 +1,34 @@
+.nocookiecard {
+  height: 100vh;
+  width: 90%;
+}
+.nocookiecard h1 {
+  margin: 3rem;
+}
+#Linklogin {
+  margin-left: 3rem;
+}
+#card {
+  height: 75vh;
+  width: 100%;
+}
+
+.leftsiderender {
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+.leftsiderender h2 {
+  margin-top: 1rem;
+  padding-bottom: 3rem;
+}
+.leftsiderender h4 {
+  padding-bottom: 1rem;
+}
+.settings {
+  position: absolute;
+  margin-left: 73rem;
+  padding: 3rem;
+}
+#modalbody {
+  text-align: center;
+}

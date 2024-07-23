@@ -79,7 +79,12 @@ const FeedPage = () => {
       } catch (error) {
         //basic error handling in case of error
         console.error(error);
-        toast.error("Error fetching posts.");
+        //using the useRef current which is the same as initialized untill changes
+        if (!hasFetchedPostData.current) {
+          //send a toast notification that users hasn't fetched
+          toast.error("Error fetching posts.");
+          hasFetchedPostData.current = true; // set the ref to true after first fetch
+        }
       }
     };
 
@@ -106,7 +111,7 @@ const FeedPage = () => {
                 src={post.post_image}
                 className="card-img-top"
                 id={styles.image}
-                alt="Image ofog blog post"
+                alt="Image of blog post"
               />
               <small className="text-muted">{post.created_at}</small>
               <div className="card-body">
@@ -159,12 +164,12 @@ const FeedPage = () => {
                 ></button>
               </div>
               <div className="modal-body">
-                <h7>
+                <h6>
                   For security and privacy, we require all users to log in to
                   view a blog post. This helps protect your personal data and
                   ensures a safer experience for everyone. Thank you for your
                   understanding.
-                </h7>
+                </h6>
               </div>
               <div className="modal-footer">
                 <button
