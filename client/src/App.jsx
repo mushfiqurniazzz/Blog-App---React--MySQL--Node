@@ -10,6 +10,8 @@ import About from "./pages/About";
 import FourOFourPage from "./pages/FourOFourPage";
 import FamousAuthors from "./pages/userpages/FamousAuthors";
 import UserProfile from "./pages/userpages/UserProfile";
+import LogoutConfirm from "./pages/userpages/LogoutConfirm";
+import DeleteUser from "./pages/userpages/DeleteUser";
 
 //app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
@@ -28,6 +30,9 @@ const App = () => {
           {/* user pages */}
           <Route path="/famousauthors" element={<FamousAuthors />} />
           <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/logout" element={<LogoutConfirm />} />
+          <Route path="/deleteuser" element={<DeleteUser/>}/>
+
           {/* others */}
           <Route path="/about" element={<About />} />
           <Route path="*" element={<FourOFourPage />} />

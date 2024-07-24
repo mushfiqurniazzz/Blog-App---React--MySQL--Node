@@ -6,7 +6,6 @@ import styles from "../../styles/UserProfile.module.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
-import LogoutModal from "./LogoutModal";
 
 const UserProfile = () => {
   //check if cookie exists in the user
@@ -17,6 +16,11 @@ const UserProfile = () => {
 
   //use ref variable for rendering the toast notification once during the use effect function
   const hasFetcheduserprofiledata = useRef(false);
+
+  //function for closing the modal when a user clicks on a specific setting
+  const CloseModalonClick = () => {
+    document.getElementById("Update user credentials(email, username)").click();
+  };
 
   //use effecct function expects a call back function which will be called when the app is mounted
   useEffect(() => {
@@ -120,23 +124,47 @@ const UserProfile = () => {
                     type="button"
                     className="btn-close"
                     data-bs-dismiss="modal"
-                    id="userprofilesettingsmodal"
+                    id="userprofilesettingsclosemodal"
                     aria-label="Close"
                   ></button>
                 </div>
                 <div className="modal-body" id={styles.modalbody}>
                   <p>
-                    <button className="btn">
+                    <Link
+                      className="btn"
+                      onClick={CloseModalonClick}
+                      to={"/updateuser"}
+                    >
                       Update user credentials(email, username)
-                    </button>
+                    </Link>
                   </p>
                   <p>
-                    <button className="btn">Change user password</button>
+                    <Link
+                      className="btn"
+                      onClick={CloseModalonClick}
+                      to={"/changeuserpassword"}
+                    >
+                      Change user password
+                    </Link>
                   </p>
                   <p>
-                    <button className="btn">Delete user</button>
+                    <Link
+                      className="btn"
+                      onClick={CloseModalonClick}
+                      to={"/deleteuser"}
+                    >
+                      Delete user
+                    </Link>
                   </p>
-                  <LogoutModal />
+                  <p>
+                    <Link
+                      className="btn"
+                      onClick={CloseModalonClick}
+                      to={"/logout"}
+                    >
+                      Logout
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>
