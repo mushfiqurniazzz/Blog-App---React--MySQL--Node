@@ -1,0 +1,11 @@
+#card{
+    display: grid;
+    height: 100vh;
+    place-items: center;
+    margin: 0;
+}
+#childcard{
+    height: 25rem;
+    width: 30rem;
+    text-align: center;
+}
