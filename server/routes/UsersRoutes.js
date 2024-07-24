@@ -29,7 +29,7 @@ router.put("/:id", UpdateUser);
 router.put("/changepass/:id", ChangePassword);
 
 //the DeleteUser function will delete a user and will send a success message indicating the user has been deleted
-router.delete("/:id", DeleteUser);
+router.delete("/deleteuser", DeleteUser);
 
 //exporting the created routes to be used in the app.use function in index.js
 module.exports = router;
