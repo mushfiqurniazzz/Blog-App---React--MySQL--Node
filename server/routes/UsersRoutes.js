@@ -23,7 +23,7 @@ router.get("/userprofile", UserProfile);
 router.get("/", GetUsers);
 
 //the UpdateUser function will update a user and then send a json object to the user about the updated email
-router.put("/:id", UpdateUser);
+router.put("/updateuser", UpdateUser);
 
 //the ChangePassword function will update a user's password and will send a success message indicating the user has been deleted
 router.put("/changepass/:id", ChangePassword);
