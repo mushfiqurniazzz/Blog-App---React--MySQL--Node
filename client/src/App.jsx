@@ -13,6 +13,7 @@ import UserProfile from "./pages/userpages/UserProfile";
 import LogoutConfirm from "./pages/userpages/LogoutConfirm";
 import DeleteUser from "./pages/userpages/DeleteUser";
 import UpdateUser from "./pages/userpages/UpdateUser";
+import ChangePassword from "./pages/userpages/ChangePassword";
 
 //app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/logout" element={<LogoutConfirm />} />
           <Route path="/deleteuser" element={<DeleteUser />} />
           <Route path="/updateuser" element={<UpdateUser />} />
+          <Route path="/changeuserpassword" element={<ChangePassword/>}/>
 
           {/* others */}
           <Route path="/about" element={<About />} />
