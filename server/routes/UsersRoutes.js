@@ -26,7 +26,7 @@ router.get("/", GetUsers);
 router.put("/updateuser", UpdateUser);
 
 //the ChangePassword function will update a user's password and will send a success message indicating the user has been deleted
-router.put("/changepass/:id", ChangePassword);
+router.put("/changepass", ChangePassword);
 
 //the DeleteUser function will delete a user and will send a success message indicating the user has been deleted
 router.delete("/deleteuser", DeleteUser);

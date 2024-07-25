@@ -180,14 +180,12 @@ const UpdateUser = async (req, res) => {
     );
 
     //send a success message that a user has been updated after successful operation, no need to select from or retrieve once again from the db as the typed or provided credentials would be the same as the stored onne
-    return res
-      .status(200)
-      .json({
-        msg: "User Updated Successfuly",
-        id: UserId,
-        email: email,
-        username: username
-      });
+    return res.status(200).json({
+      msg: "User Updated Successfuly",
+      id: UserId,
+      email: email,
+      username: username
+    });
   } catch (error) {
     //basic error handler incase of error
     console.error(error);
@@ -202,14 +200,6 @@ const ChangePassword = async (req, res) => {
   //if the cookie is not there in the user
   if (!CheckCookieExists) {
     return res.status(400).send("No Cookie Found, Login First");
-  }
-
-  //check if the id for updating the user is provided in the req params
-  const id = req.params.id;
-
-  //in case the id was not provided in req params
-  if (!id || id === "") {
-    return res.status(400).send("ID Was not Found.");
   }
 
   //fields for updating the user which will be retrieved from the req body
@@ -241,20 +231,13 @@ const ChangePassword = async (req, res) => {
     const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
     const UserId = decoded.id;
 
-    // if the id in the cookie does not match with the id in req params
-    if (UserId != id) {
-      return res
-        .status(400)
-        .send("You Are Not The User You Are Trying To Update.");
-    }
-
     //check if a user exists with the provided user using await query
     const [
       CheckUserExists
     ] = await req.pool.query(
       `SELECT COUNT(*) AS count FROM \`${process.env
         .DB_AUTHTABLE}\` WHERE id = ?`,
-      [id]
+      [UserId]
     );
 
     //check if a user exists with the id
@@ -265,7 +248,7 @@ const ChangePassword = async (req, res) => {
     //check if the typed password and the hashed password saved on the database is correct by using a bcrypt inbuilt function for comparing hashed password
     const [RetrieveUser] = await req.pool.query(
       `SELECT * FROM \`${process.env.DB_AUTHTABLE}\` WHERE id = ?`,
-      [id]
+      [UserId]
     );
 
     //save the user object in a variable
@@ -290,16 +273,19 @@ const ChangePassword = async (req, res) => {
 
     const [UpdateUser] = await req.pool.query(
       `UPDATE \`${process.env.DB_AUTHTABLE}\` SET password = ? where id = ?`,
-      [HashedPassword, id]
+      [HashedPassword, UserId]
     );
 
     //send a success message that a user has been updated after successful operation, no need to select from or retrieve once again from the db as the typed or provided credentials would be the same as the stored onne
-    return res.status(200).json({
-      msg: "User Password Updated Successfuly",
-      id: id,
-      email: FoundUser.email,
-      username: FoundUser.username
-    });
+    return res
+      .clearCookie("token", { sameSite: "none", secure: true })
+      .status(200)
+      .json({
+        msg: "User Password Updated Successfuly",
+        id: UserId,
+        email: FoundUser.email,
+        username: FoundUser.username
+      });
   } catch (error) {
     //basic error handler incase of error
     console.error(error);
