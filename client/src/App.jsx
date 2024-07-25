@@ -12,6 +12,7 @@ import FamousAuthors from "./pages/userpages/FamousAuthors";
 import UserProfile from "./pages/userpages/UserProfile";
 import LogoutConfirm from "./pages/userpages/LogoutConfirm";
 import DeleteUser from "./pages/userpages/DeleteUser";
+import UpdateUser from "./pages/userpages/UpdateUser";
 
 //app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
@@ -31,7 +32,8 @@ const App = () => {
           <Route path="/famousauthors" element={<FamousAuthors />} />
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/logout" element={<LogoutConfirm />} />
-          <Route path="/deleteuser" element={<DeleteUser/>}/>
+          <Route path="/deleteuser" element={<DeleteUser />} />
+          <Route path="/updateuser" element={<UpdateUser />} />
 
           {/* others */}
           <Route path="/about" element={<About />} />
