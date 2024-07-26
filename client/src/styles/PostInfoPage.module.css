@@ -8,3 +8,14 @@
 #Link {
   margin-left: 3rem;
 }
+.childcard {
+  margin: 3rem;
+}
+#image {
+  height: 45rem;
+  width: 70%;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  border-radius: 2%;
+  border: 1px black solid;
+}

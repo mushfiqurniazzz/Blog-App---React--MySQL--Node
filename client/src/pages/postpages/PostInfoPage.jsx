@@ -16,12 +16,49 @@ const PostInfoPage = () => {
   const [postdata, setPostdata] = useState([]);
   const hasFetchedPostData = useRef(false);
 
+  const id = new URL(window.location.href).pathname
+    .split("/")
+    .pop()
+    .replace(":", "");
+
   //passing a function and then calling it in use effect which will be rendered when the app gets mounted
   useEffect(() => {
     const FetchPostInfo = async () => {
-      const res = await axios.get("http://localhost:5000/post/:");
+      //using try catch block for better readability of code
+      try {
+        const res = await axios.get(`http://localhost:5000/post/${id}`, {
+          withCredentials: true
+        });
+
+        //hold the data recieved from the http request in a variable
+        const data = res.data;
+
+        //if the server returns a success message indicating data has been recieved
+        if (res.status === 200) {
+          //set the state varuable with the data
+          setPostdata(data);
+
+          //render a success message indicating the fetching was a success
+          if (!hasFetchedPostData) {
+            toast.success("Blog post data fetched.");
+            //set the ref variable as true after rendering
+            hasFetchedPostData.current = true;
+          }
+        }
+      } catch (error) {
+        //basic error handling incase of error
+        console.log(error);
+        //render a toast notification using the use ref variable
+        if (!hasFetchedPostData.current) {
+          toast.error("Something went wrong.");
+          //set the ref variable as true after rendering
+          hasFetchedPostData.current = true;
+        }
+      }
     };
-  }, []);
+
+    FetchPostInfo();
+  }, [id]);
 
   return (
     <>
@@ -40,7 +77,21 @@ const PostInfoPage = () => {
           </div>
         </>
       ) : (
-        ""
+        <div className="card" id={styles.card}>
+          <div className={styles.childcard}>
+            <h1>
+              {postdata.post_id}. {postdata.post_title}
+            </h1>
+            <h5>This Blog post was made by author: {postdata.author_id}</h5>
+            <p>Was uploaded at: {postdata.created_at}</p>
+            <img
+              id={styles.image}
+              src={postdata.post_image}
+              alt="image of the blog post used by the author"
+            />
+            <p>{postdata.post_body}</p>
+          </div>
+        </div>
       )}
       <Footer />
     </>
