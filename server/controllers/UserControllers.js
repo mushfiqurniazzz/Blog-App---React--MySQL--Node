@@ -377,14 +377,25 @@ const UserProfile = async (req, res) => {
     [UserId]
   );
 
+  //retrieve all the posts from the database where author is the id extracted from the cookie and send to the user
+  const [
+    RetrievePostsFromPost
+  ] = await req.pool.query(
+    `SELECT * FROM \`${process.env.DB_POSTTABLE}\` WHERE author_id = ?`,
+    [UserId]
+  );
+
   //return the data in a json objectw ith a success code
-  res.status(200).json({
-    id: UserId,
-    email: UserAuthInfo.email,
-    username: UserAuthInfo.username,
-    created_at: UserAuthInfo.created_at,
-    totalposts: RetrieveFromPost[0].count
-  });
+  res
+    .status(200)
+    .json({
+      id: UserId,
+      email: UserAuthInfo.email,
+      username: UserAuthInfo.username,
+      created_at: UserAuthInfo.created_at,
+      totalposts: RetrieveFromPost[0].count,
+      userPosts: RetrievePostsFromPost
+    });
 };
 
 module.exports = {

@@ -13,13 +13,14 @@ const UserProfile = () => {
 
   //use state variable for initializing the variable with res data for easy access
   const [userprofiledata, setUserprofiledata] = useState([]);
+  const [userposts, setUserPostsData] = useState([]);
 
   //use ref variable for rendering the toast notification once during the use effect function
   const hasFetcheduserprofiledata = useRef(false);
 
   //function for closing the modal when a user clicks on a specific setting
   const CloseModalonClick = () => {
-    document.getElementById("Update user credentials(email, username)").click();
+    document.getElementById("userprofilesettingsclosemodal").click();
   };
 
   //use effecct function expects a call back function which will be called when the app is mounted
@@ -36,8 +37,9 @@ const UserProfile = () => {
         if (res.status === 200) {
           //create a data variable and set the empty array with data retrieved from the axios post request
           const data = res.data;
-
+          console.log(data);
           setUserprofiledata(data);
+          setUserPostsData(data.userPosts);
 
           //render a success message to the user as the user profile info fetching was a success using the use ref variable for rendering the success message once
           if (!hasFetcheduserprofiledata.current) {
@@ -101,6 +103,45 @@ const UserProfile = () => {
               <h4>
                 <b>Total posts :</b> {userprofiledata.totalposts}
               </h4>
+              <hr />
+            </div>
+            <h2 id={styles.h2}>Posts you&apos;re author of</h2>
+            <div className={styles.postbody}>
+              {userposts.map((post) => (
+                <div
+                  className="card"
+                  id={styles.postscard}
+                  key={post.post_id}
+                  style={{ width: "20rem", height: "25rem" }}
+                >
+                  <img
+                    src={post.post_image}
+                    className="card-img-top"
+                    id={styles.image}
+                    alt="Image of blog post"
+                  />
+                  <small className="text-muted">{post.created_at}</small>
+                  <div className="card-body">
+                    <h5 className="card-title">{post.post_title}</h5>
+                    <div className={styles.buttonsdiv}>
+                      <Link
+                        className="btn btn-warning"
+                        id={styles.buttons}
+                        to={`/updatepost/:${post.post_id}`}
+                      >
+                        Update Post
+                      </Link>
+                      <Link
+                        className="btn btn-danger"
+                        id={styles.buttons}
+                        to={`/deletepost/:${post.post_id}`}
+                      >
+                        Delete Post
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

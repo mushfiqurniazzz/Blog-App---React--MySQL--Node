@@ -9,7 +9,6 @@
   margin-left: 3rem;
 }
 #card {
-  height: 75vh;
   width: 100%;
 }
 
@@ -31,4 +30,40 @@
 }
 #modalbody {
   text-align: center;
+}
+#h2 {
+  text-align: center;
+}
+.postbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+}
+#postscard {
+  display: flex;
+  margin: 3rem !important;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
+.buttonsdiv{
+  margin-top: 2rem;
+}
+#buttons{
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+#image {
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
