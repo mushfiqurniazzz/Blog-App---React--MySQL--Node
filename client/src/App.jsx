@@ -14,6 +14,8 @@ import LogoutConfirm from "./pages/userpages/LogoutConfirm";
 import DeleteUser from "./pages/userpages/DeleteUser";
 import UpdateUser from "./pages/userpages/UpdateUser";
 import ChangePassword from "./pages/userpages/ChangePassword";
+import UpdatePost from "./pages/postpages/UpdatePost";
+import DeletePost from "./pages/postpages/DeletePost";
 
 //app componenet function which will hold routing of the client side, toast notification configuration
 const App = () => {
@@ -29,14 +31,15 @@ const App = () => {
           <Route path="/createpost" element={<CreatePost />} />
           <Route path="/" element={<FeedPage />} />
           <Route path="/postinfo/:id" element={<PostInfoPage />} />
+          <Route path="/updatepost/:id" element={<UpdatePost />} />
+          <Route path="/deletepost/:id" element={<DeletePost />} />
           {/* user pages */}
           <Route path="/famousauthors" element={<FamousAuthors />} />
           <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/logout" element={<LogoutConfirm />} />
           <Route path="/deleteuser" element={<DeleteUser />} />
           <Route path="/updateuser" element={<UpdateUser />} />
-          <Route path="/changeuserpassword" element={<ChangePassword/>}/>
-
+          <Route path="/changeuserpassword" element={<ChangePassword />} />
           {/* others */}
           <Route path="/about" element={<About />} />
           <Route path="*" element={<FourOFourPage />} />

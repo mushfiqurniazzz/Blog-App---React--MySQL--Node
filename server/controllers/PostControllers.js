@@ -190,21 +190,7 @@ const DeletePost = async (req, res) => {
     //decoding and storing the user id from cookie called token
     const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
     const UserId = decoded.id;
-
-    //check if the user id matches with the post author's id
-    const [
-      CheckIfIdMatches
-    ] = await req.pool.query(
-      `SELECT COUNT(*) AS count FROM \`${process.env
-        .DB_POSTTABLE}\` WHERE author_id = ? AND post_id = ?`,
-      [UserId, id]
-    );
-
-    //check if the specific post has auther being the user retrieved from the cookie
-    if (CheckIfIdMatches[0].count === 0) {
-      return res.status(400).send("You Aren't The Author, Can't Delete Post");
-    }
-
+    
     //delete the post after the author id and id from cookie matches
     const [DeletePost] = await req.pool.query(
       `DELETE FROM \`${process.env.DB_POSTTABLE}\` WHERE post_id = ?`,
