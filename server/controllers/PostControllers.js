@@ -190,7 +190,7 @@ const DeletePost = async (req, res) => {
     //decoding and storing the user id from cookie called token
     const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);
     const UserId = decoded.id;
-    
+
     //delete the post after the author id and id from cookie matches
     const [DeletePost] = await req.pool.query(
       `DELETE FROM \`${process.env.DB_POSTTABLE}\` WHERE post_id = ?`,
@@ -268,8 +268,8 @@ const UpdatePost = async (req, res) => {
       //update the post after the author id and id from cookie matches with the cloudinary image url
       const [UpdatePost] = await req.pool.query(
         `UPDATE \`${process.env
-          .DB_POSTTABLE}\` SET post_title = ?, post_body = ?, post_image = ?`,
-        [post_title, post_body, ImageUrl]
+          .DB_POSTTABLE}\` SET post_title = ?, post_body = ?, post_image = ? WHERE post_id = ?`,
+        [post_title, post_body, ImageUrl, id]
       );
 
       //send a success message
@@ -278,8 +278,8 @@ const UpdatePost = async (req, res) => {
       //update the post after the author id and id from cookie matches
       const [UpdatePost] = await req.pool.query(
         `UPDATE \`${process.env
-          .DB_POSTTABLE}\` SET post_title = ?, post_body = ?`,
-        [post_title, post_body]
+          .DB_POSTTABLE}\` SET post_title = ?, post_body = ? WHERE post_id = ?`,
+        [post_title, post_body, id]
       );
 
       //send a success message
