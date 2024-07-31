@@ -32,11 +32,11 @@ const UserProfile = () => {
         const res = await axios.get("http://localhost:5000/user/userprofile", {
           withCredentials: true
         });
-
+        const data = res.data;
         //if the server sends a response of 200 which indicates successful operation
         if (res.status === 200) {
           //create a data variable and set the empty array with data retrieved from the axios post request
-          const data = res.data;
+
           console.log(data);
           setUserprofiledata(data);
           setUserPostsData(data.userPosts);

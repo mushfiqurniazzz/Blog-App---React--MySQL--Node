@@ -12,6 +12,7 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 //js-cookie library makes it easy to retrieve or set cokies from the frontend for the user
 import Cookies from "js-cookie";
+import OAuth from "../../components/OAuth";
 
 //the login page functional componenet which will first check if the user has a cookie called token in the cookie section else will continue to log the user in ans set a cookie
 const LoginPage = () => {
@@ -51,7 +52,8 @@ const LoginPage = () => {
       if (res.status === 200) {
         toast.success("Login successful, heading to home page.");
         console.log(res.data);
-
+        const cookieTokenValue = res.data.token;
+        Cookies.set("token", cookieTokenValue);
         setTimeout(() => {
           navigate("/");
         }, 3000);
@@ -64,7 +66,7 @@ const LoginPage = () => {
   };
   return (
     <>
-    {/* react conditional rendering which will state some message if the cookie is present */}
+      {/* react conditional rendering which will state some message if the cookie is present */}
       {CheckCookieExists ? (
         <div>
           <NavBar />
@@ -123,6 +125,7 @@ const LoginPage = () => {
                 >
                   Login
                 </button>
+                <OAuth />
               </div>
             </form>
           </div>

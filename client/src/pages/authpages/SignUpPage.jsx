@@ -11,6 +11,7 @@ import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
 //js-cookie library provides a easy way of setting, removing and getting cookies
 import Cookies from "js-cookie";
+import OAuth from "../../components/OAuth";
 
 const SignUpPage = () => {
   //check if there's a cookie exisiting in the cookie section of the user which will be saved during the log in proccess, if theres no cookie render the form else dont
@@ -167,6 +168,7 @@ const SignUpPage = () => {
                 >
                   Signup
                 </button>
+                <OAuth/>
               </div>
             </form>
           </div>
