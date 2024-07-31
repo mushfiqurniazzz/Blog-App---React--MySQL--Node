@@ -14,12 +14,16 @@
   margin: 1rem;
   text-align: center;
 }
-#formfooterbutton {
-  margin-left: 13.5rem;
-}
 #formfooterp {
   margin-left: 22rem;
 }
-.LoggedInUser{
+.LoggedInUser {
   height: 100vh;
+}
+#buttons {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  grid-template-columns: auto auto;
+  gap: 10px;
 }

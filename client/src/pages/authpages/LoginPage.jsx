@@ -117,15 +117,16 @@ const LoginPage = () => {
                 <p id={styles.formfooterp}>
                   Don&apos;t have an account? <Link to="/signup">Signup</Link>
                 </p>
-                <button
-                  id={styles.formfooterbutton}
-                  type="submit"
-                  onClick={LoginHandler}
-                  className="btn btn-primary"
-                >
-                  Login
-                </button>
-                <OAuth />
+                <div id={styles.buttons}>
+                  <button
+                    type="submit"
+                    onClick={LoginHandler}
+                    className="btn btn-primary"
+                  >
+                    Login
+                  </button>
+                  <OAuth />{" "}
+                </div>
               </div>
             </form>
           </div>
