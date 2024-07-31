@@ -17,7 +17,6 @@ const OAuth = () => {
   //using some important libraries for our desired tasks
   const auth = getAuth(app);
   const navigate = useNavigate();
-  const location = window.location.href;
 
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
