@@ -16,17 +16,12 @@ const token = (FoundUser, res) => {
     }
   );
 
-  // set the token as a cookie in the response headers
-  res.cookie("token", jwtToken, {
-    httpOnly: false, // this alows client-side JavaScript for accessing the cookie
-    maxAge: 30 * 24 * 60 * 60 * 1000 // ensures the cookie expires in 30 days
-  });
-
   //sending the generated cookiee back to the client
   return res.status(200).json({
     msg: "token received",
     id: FoundUser.id,
-    username: FoundUser.username
+    username: FoundUser.username,
+    token: jwtToken
   });
 };
 
