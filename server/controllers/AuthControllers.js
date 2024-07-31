@@ -230,53 +230,55 @@ const GoogleAuth = async (req, res) => {
 
       //passing the user
       token(FoundUser, res);
+    } else {
+      //else case, if the user didnt exist
+
+      //creating the username field
+      const username = email.substring(0, email.indexOf("@"));
+
+      //creating the password, as we dont get any passwords provided from firebase
+      const password =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      //for hashing the typed password before saving it using bcryptjs which is used for hashing using salt
+      const salt = await bcrypt.genSalt(10); //10 rounds of salt
+
+      //hashing the password
+      const HashedPassword = await bcrypt.hash(password, salt);
+
+      //saving the user with email, username and hashed password
+      const [InsertUser] = await req.pool.query(
+        `INSERT INTO \`${process.env
+          .DB_AUTHTABLE}\` (email, username, password) VALUES (?, ?, ?)`,
+        [email, username, HashedPassword]
+      );
+
+      //retriving the user for sending a success message
+      const [
+        RetriveInsertedUser
+      ] = await req.pool.query(
+        `SELECT id, email, username, created_at FROM \`${process.env
+          .DB_AUTHTABLE}\` WHERE id = ?`,
+        [InsertUser.insertId]
+      );
+
+      //declaring the retrived user object as a variable
+      const InsertedUser = RetriveInsertedUser[0];
+
+      //console logging in the server that a user has been created using firebase
+      console.log(
+        `A User Has Been Created Using Firebase, ID = ${InsertedUser.id}`
+      );
+
+      //sending the created user details to the server
+      return res.status(201).json({
+        id: InsertedUser.id,
+        username: InsertedUser.username,
+        email: InsertedUser.email,
+        created_at: InsertedUser.created_at
+      });
     }
-
-    //else case, if the user didnt exist
-
-    //creating the username field
-    const username = email.substring(0, email.indexOf("@"));
-
-    //creating the password, as we dont get any passwords provided from firebase
-    const password =
-      Math.random().toString(36).slice(-8) +
-      Math.random().toString(36).slice(-8);
-
-    //for hashing the typed password before saving it using bcryptjs which is used for hashing using salt
-    const salt = await bcrypt.genSalt(10); //10 rounds of salt
-
-    //hashing the password
-    const HashedPassword = await bcrypt.hash(password, salt);
-
-    //saving the user with email, username and hashed password
-    const [InsertUser] = await req.pool.query(
-      `INSERT INTO \`${process.env
-        .DB_AUTHTABLE}\` (email, username, password) VALUES (?, ?, ?)`,
-      [email, username, HashedPassword]
-    );
-
-    //retriving the user for sending a success message
-    const [
-      RetriveInsertedUser
-    ] = await req.pool.query(
-      `SELECT id, email, username, created_at FROM \`${process.env
-        .DB_AUTHTABLE}\` WHERE id = ?`,
-      [InsertUser.insertId]
-    );
-
-    //declaring the retrived user object as a variable
-    const InsertedUser = RetriveInsertedUser[0];
-
-    //console logging in the server that a user has been created using firebase
-    console.log(`A User Has Been Created Using Firebase, ID = ${InsertedUser.id}`);
-
-    //sending the created user details to the server
-    return res.status(201).json({
-      id: InsertedUser.id,
-      username: InsertedUser.username,
-      email: InsertedUser.email,
-      created_at: InsertedUser.created_at
-    });
   } catch (error) {
     //basic error handling during error
     console.error(error);
