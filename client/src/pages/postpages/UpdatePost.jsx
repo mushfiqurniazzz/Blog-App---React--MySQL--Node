@@ -24,9 +24,6 @@ const UpdatePost = () => {
     .pop()
     .replace(":", "");
 
-  //use state variable for holding the use eddect data into which will be used for the uther state variables
-  const [PostData, setPostData] = useState([]);
-
   //use state variable for dynamically changing and having hold of the value of post title input field
   const [post_title, setPost_title] = useState();
 
@@ -50,13 +47,12 @@ const UpdatePost = () => {
 
         //hold the data recieved from the http request in a variable
         const data = res.data;
-
+        console.log(data);
         //if the server returns a success message indicating data has been recieved
         if (res.status === 200) {
           //set the state varuable with the data
-          setPostData(data);
-          setPost_title(PostData.post_title);
-          setPost_body(PostData.post_body);
+          setPost_title(data.post_title);
+          setPost_body(data.post_body);
         }
       } catch (error) {
         //basic error handling incase of error

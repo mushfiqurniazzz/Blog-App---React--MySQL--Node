@@ -60,7 +60,7 @@ const FamousAuthors = () => {
         {/* if the data recieved has no posts */}
         {topusersdata.length === 0 ? (
           <div className={styles.nopostfoundbody}>
-            <h1 className={styles.nopostfound}>No blog posts in database.</h1>
+            <h1 className={styles.nopostfound}>No users found in database.</h1>
           </div>
         ) : (
           // seperate the data and display them on the ui
