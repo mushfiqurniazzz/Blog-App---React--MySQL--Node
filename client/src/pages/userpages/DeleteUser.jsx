@@ -19,23 +19,18 @@ const DeleteUser = () => {
     //using try catch blocks for better maintainability and readability of code
     try {
       //send a await axios post for sending a post request
-      const res = await axios.delete(
-        "http://localhost:5000/user/deleteuser",
-        {
-          withCredentials: true
-        }
-      );
+      const res = await axios.delete("http://localhost:5000/user/deleteuser", {
+        withCredentials: true,
+      });
 
       //if the request was a success the server will return a success message
-      if (res.status === 200) {
-        toast.success("User deleted, will head to home.");
+      toast.success("User deleted, will head to home.");
 
-        //navigate to home after the toast notification is rendered
-        setTimeout(() => {
-          //navigating the user to the home page after successful logout
-          navigate("/");
-        }, 3000);
-      }
+      //navigate to home after the toast notification is rendered
+      setTimeout(() => {
+        //navigating the user to the home page after successful logout
+        navigate("/");
+      }, 3000);
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
@@ -68,7 +63,9 @@ const DeleteUser = () => {
             <h3>Delete User Confirmation</h3>
             <hr />
             <p>
-              Are you sure you want to delete your account? this action will cause all your posts and data to be deleted from server. This action can not be undo.
+              Are you sure you want to delete your account? this action will
+              cause all your posts and data to be deleted from server. This
+              action can not be undo.
             </p>
             <hr />
             <button className="btn btn-success" onClick={DeleteHandler}>

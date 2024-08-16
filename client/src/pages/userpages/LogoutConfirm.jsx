@@ -26,20 +26,18 @@ const LogoutConfirm = () => {
         "http://localhost:5000/auth/logout",
         { "": "" },
         {
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
-      //if the request was a success the server will return a success message
-      if (res.status === 200) {
-        toast.success("Loging out, will head to home.");
+      //render a toast notification
+      toast.success("Loging out, will head to home.");
 
-        //navigate to home after the toast notification is rendered
-        setTimeout(() => {
-          //navigating the user to the home page after successful logout
-          navigate("/");
-        }, 3000);
-      }
+      //navigate to home after the toast notification is rendered
+      setTimeout(() => {
+        //navigating the user to the home page after successful logout
+        navigate("/");
+      }, 3000);
     } catch (error) {
       //basic error handling in case of error
       console.log(error);

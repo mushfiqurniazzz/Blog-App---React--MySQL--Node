@@ -25,23 +25,20 @@ const FamousAuthors = () => {
         //sending a get request using axios
         const res = await axios.get("http://localhost:5000/user");
 
-        //if the res had a success
-        if (res.status === 200) {
-          //saving the res data in a variable
-          const topusersfetcheddata = res.data;
+        //saving the res data in a variable
+        const topusersfetcheddata = res.data;
 
-          //console logging the data
-          console.log(topusersfetcheddata);
+        //console logging the data
+        console.log(topusersfetcheddata);
 
-          if (!hasFetchedtopusersdata.current) {
-            //render a toast success message
-            toast.success("Users fetched successfuly");
-            hasFetchedtopusersdata.current = true;
-          }
-
-          //set the use state variable
-          setTopusersdata(topusersfetcheddata);
+        if (!hasFetchedtopusersdata.current) {
+          //render a toast success message
+          toast.success("Users fetched successfuly");
+          hasFetchedtopusersdata.current = true;
         }
+
+        //set the use state variable
+        setTopusersdata(topusersfetcheddata);
       } catch (error) {
         if (!hasFetchedtopusersdata.current) {
           //render a toast error message

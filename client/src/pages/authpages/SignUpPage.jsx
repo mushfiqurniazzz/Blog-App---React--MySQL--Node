@@ -57,17 +57,17 @@ const SignUpPage = () => {
         email: email,
         username: username,
         password: password,
-        confirm_password: confirm_password
+        confirm_password: confirm_password,
       });
 
-      //if the sign up was successfull the server will return a 201 created http res code then send a toast success notification, console log the user info like id, email and username of the user then finally navigate the user ot the login for logging in
-      if (res.status === 201) {
-        toast.success("User created, heading to login.");
-        console.log(res.data);
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
-      }
+      //render a toast notification
+      toast.success("User created, heading to login.");
+      console.log(res.data);
+
+      //after about 3 sec navigate the user to the login page
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       //basic error handler incase of error
       console.error(error);
@@ -78,7 +78,7 @@ const SignUpPage = () => {
     <>
       {CheckCookieExists ? (
         <>
-          <NavBar />{" "}
+          <NavBar />
           <h1 className={styles.LoggedInUser}>
             Cannot add another account when a user&apos;s already logged in.
           </h1>

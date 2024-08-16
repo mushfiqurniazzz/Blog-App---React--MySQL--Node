@@ -46,29 +46,26 @@ const UpdateUser = () => {
         {
           email: email,
           username: username,
-          password: password
+          password: password,
         },
         {
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
       //hold the recieved data in a variable
       const data = res.data;
 
-      //if the server sends a success message
-      if (res.status === 200) {
-        //console log the data which is the newly updated credentials
-        console.log(data);
+      //console log the data which is the newly updated credentials
+      console.log(data);
 
-        //render a success message that the user has been updated
-        toast.success("User updated, heading to profile");
+      //render a success message that the user has been updated
+      toast.success("User updated, heading to profile");
 
-        //after 3 sec navigate the user to the profile page
-        setTimeout(() => {
-          navigate("/userprofile");
-        }, 3000);
-      }
+      //after 3 sec navigate the user to the profile page
+      setTimeout(() => {
+        navigate("/userprofile");
+      }, 3000);
     } catch (error) {
       //basic error handling in case of error
       console.log(error);

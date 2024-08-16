@@ -27,23 +27,20 @@ const PostInfoPage = () => {
       //using try catch block for better readability of code
       try {
         const res = await axios.get(`http://localhost:5000/post/${id}`, {
-          withCredentials: true
+          withCredentials: true,
         });
 
         //hold the data recieved from the http request in a variable
         const data = res.data;
 
-        //if the server returns a success message indicating data has been recieved
-        if (res.status === 200) {
-          //set the state varuable with the data
-          setPostdata(data);
+        //set the state varuable with the data
+        setPostdata(data);
 
-          //render a success message indicating the fetching was a success
-          if (!hasFetchedPostData) {
-            toast.success("Blog post data fetched.");
-            //set the ref variable as true after rendering
-            hasFetchedPostData.current = true;
-          }
+        //render a success message indicating the fetching was a success
+        if (!hasFetchedPostData.current) {
+          toast.success("Blog post data fetched.");
+          //set the ref variable as true after rendering
+          hasFetchedPostData.current = true;
         }
       } catch (error) {
         //basic error handling incase of error

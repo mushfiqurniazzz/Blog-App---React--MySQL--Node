@@ -49,21 +49,21 @@ const CreatePost = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
-      if (res.status === 201) {
-        console.log(res.data);
-        toast.success("Your post was added.");
+      console.log(res.data);
 
-        //now set the input fields as it was before
-        setPost_title("");
-        setPost_body("");
-        fileInputRef.current.value = null;
-      }
+      //render a toast notification
+      toast.success("Your post was added.");
+
+      //now set the input fields as it was before
+      setPost_title("");
+      setPost_body("");
+      fileInputRef.current.value = null;
     } catch (error) {
       //basic error handler incase of error, console log the error mesage and send a toast message stating something went wrong
       console.error(error);

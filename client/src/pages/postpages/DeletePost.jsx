@@ -26,19 +26,17 @@ const DeletePost = () => {
     try {
       //send a await axios post for sending a post request
       const res = await axios.delete(`http://localhost:5000/post/${id}`, {
-        withCredentials: true
+        withCredentials: true,
       });
 
-      //if the request was a success the server will return a success message
-      if (res.status === 200) {
-        toast.success("Post deleted, will head to user profile.");
+      //render a toast notification
+      toast.success("Post deleted, will head to user profile.");
 
-        //navigate to home after the toast notification is rendered
-        setTimeout(() => {
-          //navigating the user to the home page after successful logout
-          navigate("/userprofile");
-        }, 3000);
-      }
+      //navigate to home after the toast notification is rendered
+      setTimeout(() => {
+        //navigating the user to the home page after successful logout
+        navigate("/userprofile");
+      }, 3000);
     } catch (error) {
       //basic error handling in case of error
       console.log(error);

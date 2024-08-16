@@ -43,21 +43,22 @@ const LoginPage = () => {
         "http://localhost:5000/auth/login",
         {
           username: username,
-          password: password
+          password: password,
         },
         { withCredentials: true }
       );
+      //render a toast notification
+      toast.success("Login successful, heading to home page.");
+      console.log(res.data);
 
-      //if the sign up was successfull the server will return a 200 http res code then send a toast success notification, console log the user info like id, email and username of the user then finally navigate the user ot the / after logging in
-      if (res.status === 200) {
-        toast.success("Login successful, heading to home page.");
-        console.log(res.data);
-        const cookieTokenValue = res.data.token;
-        Cookies.set("token", cookieTokenValue);
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
-      }
+      //setting a token using the value recieved from the response data from the axios post request
+      const cookieTokenValue = res.data.token;
+      Cookies.set("token", cookieTokenValue);
+
+      //after about 3 sec navigate the user to the home page
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
       //basic error handler incase of error
       console.error(error);

@@ -42,18 +42,16 @@ const UpdatePost = () => {
       //using try catch block for better readability of code
       try {
         const res = await axios.get(`http://localhost:5000/post/${id}`, {
-          withCredentials: true
+          withCredentials: true,
         });
 
         //hold the data recieved from the http request in a variable
         const data = res.data;
         console.log(data);
         //if the server returns a success message indicating data has been recieved
-        if (res.status === 200) {
-          //set the state varuable with the data
-          setPost_title(data.post_title);
-          setPost_body(data.post_body);
-        }
+        //set the state varuable with the data
+        setPost_title(data.post_title);
+        setPost_body(data.post_body);
       } catch (error) {
         //basic error handling incase of error
         console.log(error);
@@ -89,26 +87,26 @@ const UpdatePost = () => {
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
-      if (res.status === 200) {
-        console.log(res.data);
-        toast.success("Your post was updated, heading to profile.");
+      console.log(res.data);
 
-        //now set the input fields as it was before
-        setPost_title("");
-        setPost_body("");
-        fileInputRef.current.value = null;
+      //render a toast notification
+      toast.success("Your post was updated, heading to profile.");
 
-        //after 3sec navigate the user to the profile page
-        setTimeout(() => {
-          navigate("/userprofile");
-        }, 3000);
-      }
+      //now set the input fields as it was before
+      setPost_title("");
+      setPost_body("");
+      fileInputRef.current.value = null;
+
+      //after 3sec navigate the user to the profile page
+      setTimeout(() => {
+        navigate("/userprofile");
+      }, 3000);
     } catch (error) {
       //basic error handler incase of error, console log the error mesage and send a toast message stating something went wrong
       console.error(error);

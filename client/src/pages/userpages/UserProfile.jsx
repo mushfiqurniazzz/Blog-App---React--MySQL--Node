@@ -30,22 +30,19 @@ const UserProfile = () => {
       try {
         //send a post request to the server for fetching user profile infoormation
         const res = await axios.get("http://localhost:5000/user/userprofile", {
-          withCredentials: true
+          withCredentials: true,
         });
         const data = res.data;
-        //if the server sends a response of 200 which indicates successful operation
-        if (res.status === 200) {
-          //create a data variable and set the empty array with data retrieved from the axios post request
 
-          console.log(data);
-          setUserprofiledata(data);
-          setUserPostsData(data.userPosts);
+        //create a data variable and set the empty array with data retrieved from the axios post request
+        console.log(data);
+        setUserprofiledata(data);
+        setUserPostsData(data.userPosts);
 
-          //render a success message to the user as the user profile info fetching was a success using the use ref variable for rendering the success message once
-          if (!hasFetcheduserprofiledata.current) {
-            toast.success("User info was fetched successfuly.");
-            hasFetcheduserprofiledata.current = true;
-          }
+        //render a success message to the user as the user profile info fetching was a success using the use ref variable for rendering the success message once
+        if (!hasFetcheduserprofiledata.current) {
+          toast.success("User info was fetched successfuly.");
+          hasFetcheduserprofiledata.current = true;
         }
       } catch (error) {
         //basic error handling in case of error

@@ -47,10 +47,10 @@ const ChangePassword = () => {
         {
           old_password: old_password,
           new_password: new_password,
-          confirm_new_password: confirm_new_password
+          confirm_new_password: confirm_new_password,
         },
         {
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
@@ -58,20 +58,19 @@ const ChangePassword = () => {
       const data = res.data;
 
       //incase the axios http request to the server was a success
-      if (res.status === 200) {
-        //console log the data recieved from the server
-        console.log(data);
 
-        //render a toast notfication that the user password has been updated
-        toast.success("Password updated, heading to profile", {
-          description: "You will be now required to log in again."
-        });
+      //console log the data recieved from the server
+      console.log(data);
 
-        //after 3sec navigate the user to profile
-        setTimeout(() => {
-          navigate("/login");
-        }, 3000);
-      }
+      //render a toast notfication that the user password has been updated
+      toast.success("Password updated, heading to profile", {
+        description: "You will be now required to log in again.",
+      });
+
+      //after 3sec navigate the user to profile
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
