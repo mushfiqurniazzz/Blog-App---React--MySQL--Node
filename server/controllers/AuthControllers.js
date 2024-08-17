@@ -20,12 +20,12 @@ const SignUp = async (req, res) => {
     confirm_password == ""
   ) {
     //return from the fucntion and send the error message
-    return res.status(400).send("All Fields Are Required.");
+    return res.status(404).send("All Fields Are Required.");
   }
 
   //check if both the passwords are the same, password and confirm password
   if (password != confirm_password) {
-    return res.status(400).send("Password And Confirm Password Do Not Match.");
+    return res.status(401).send("Password And Confirm Password Do Not Match.");
   }
 
   //if all fields are filled
@@ -46,7 +46,7 @@ const SignUp = async (req, res) => {
     if (CheckUniqueEmail[0].count > 0) {
       //return from the fucntion and send the error message
       return res
-        .status(400)
+        .status(408)
         .send("User With Same Email Already Exists, Try Another Email.");
     }
 
@@ -62,7 +62,7 @@ const SignUp = async (req, res) => {
     //the database stores data in rows so after the filter is applied if there exists a row the below validation check would be true and return the message of username already in use
     if (CheckUniqueUsername[0].count > 0) {
       return res
-        .status(400)
+        .status(409)
         .send("User With Same Username Already Exists, Try Another Username");
     }
 
@@ -114,7 +114,7 @@ const LogIn = async (req, res) => {
 
   //check if any field is null or is not provided
   if (!username || username === "" || !password || password === "") {
-    return res.status(400).send("All Fields Are Required.");
+    return res.status(404).send("All Fields Are Required.");
   }
   try {
     //checking if a user with a same username exists in databse
@@ -171,7 +171,7 @@ const LogOut = (req, res) => {
 
   //check if the retrival was successful
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First.");
+    return res.status(401).send("No Cookie Found, Login First.");
   }
   try {
     const decoded = jwt.verify(CheckCookieExists, process.env.JWT_SECRET);

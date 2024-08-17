@@ -12,7 +12,7 @@ const AddPost = async (req, res) => {
 
   //if the check was successful
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First.");
+    return res.status(401).send("No Cookie Found, Login First.");
   }
 
   //post tittle, post body and the image would be retrieved from the req.body
@@ -20,7 +20,7 @@ const AddPost = async (req, res) => {
 
   //check if we got everything required to make a blog, incase we didn't send a 400 status saying all fields are required
   if (!post_title || post_title === "" || !post_body || post_body === "") {
-    return res.status(400).send("All Fields Are Required.");
+    return res.status(404).send("All Fields Are Required.");
   }
 
   //try catch block for helpful error handling and maintainability
@@ -124,7 +124,7 @@ const GetPost = async (req, res) => {
 
   //if no cookie exists
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First");
+    return res.status(401).send("No Cookie Found, Login First");
   }
 
   //retrive id from req params
@@ -132,7 +132,7 @@ const GetPost = async (req, res) => {
 
   //check if id was recieved
   if (!id || id === "") {
-    return res.status(400).send("ID Was Not Found");
+    return res.status(422).send("ID Was Not Found");
   }
 
   try {
@@ -174,7 +174,7 @@ const DeletePost = async (req, res) => {
 
   //check if the user has the token
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First");
+    return res.status(401).send("No Cookie Found, Login First");
   }
 
   //the post id which will be retrieved from the url
@@ -182,7 +182,7 @@ const DeletePost = async (req, res) => {
 
   //check if the user send a id
   if (!id || id === "") {
-    return res.status(400).send("ID Was Not Found");
+    return res.status(422).send("ID Was Not Found");
   }
 
   //try catch block for helpful error handling and maintainability
@@ -215,7 +215,7 @@ const UpdatePost = async (req, res) => {
 
   //check if the user has the token
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First.");
+    return res.status(401).send("No Cookie Found, Login First.");
   }
 
   //the post id which will be retrieved from the url
@@ -223,7 +223,7 @@ const UpdatePost = async (req, res) => {
 
   //check if the user send a id
   if (!id || id === "") {
-    return res.status(400).send("ID Was Not Found.");
+    return res.status(422).send("ID Was Not Found.");
   }
 
   //the fields which will be recieved from the req body
@@ -231,7 +231,7 @@ const UpdatePost = async (req, res) => {
 
   //check if all the fields are recieved
   if (!post_title || post_title === "" || !post_body || post_body === "") {
-    return res.status(400).send("All Fields Are Required.");
+    return res.status(404).send("All Fields Are Required.");
   }
 
   //try catch block for helpful error handling and maintainability
@@ -251,7 +251,7 @@ const UpdatePost = async (req, res) => {
 
     //check if the specific post has auther being the user retrieved from the cookie
     if (CheckIfIdMatches[0].count === 0) {
-      return res.status(400).send("You Aren't The Author, Can't Update Post.");
+      return res.status(403).send("You Aren't The Author, Can't Update Post.");
     }
 
     //console logging that a user has updated a post

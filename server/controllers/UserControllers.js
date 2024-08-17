@@ -9,7 +9,7 @@ const SearchUser = async (req, res) => {
 
   //if no id was provided
   if (!id || id === "") {
-    return res.status(400).send("ID Was Not Found.");
+    return res.status(422).send("ID Was Not Found.");
   }
 
   //check if the user with the retrieved user id exists or not
@@ -115,7 +115,7 @@ const UpdateUser = async (req, res) => {
 
   //if the cookie is not there in the user
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First");
+    return res.status(401).send("No Cookie Found, Login First");
   }
 
   //fields for updating the user which will be retrieved from the req body
@@ -129,7 +129,7 @@ const UpdateUser = async (req, res) => {
     !password ||
     password === ""
   ) {
-    return res.status(400).send("ALL Fields Are Required.");
+    return res.status(422).send("ALL Fields Are Required.");
   }
 
   //try catch block for helpful error handling and maintainability
@@ -149,7 +149,7 @@ const UpdateUser = async (req, res) => {
 
     //check if a user exists with the id
     if (CheckUserExists[0] === 0) {
-      return res.status(400).send(`No User Found With Provided Id`);
+      return res.status(404).send(`No User Found With Provided Id`);
     }
 
     //check if the typed password and the hashed password saved on the database is correct by using a bcrypt inbuilt function for comparing hashed password
@@ -169,11 +169,11 @@ const UpdateUser = async (req, res) => {
 
     //if the comparasion of the hashed password was not successful
     if (!CompareHashedPassword) {
-      return res.status(400).send("Wrong Password! Try Again.");
+      return res.status(403).send("Wrong Password! Try Again.");
     }
 
     //after all checks we will now update the user with email, username and password
-    const [UpdateUser] = await req.pool.query(
+    await req.pool.query(
       `UPDATE \`${process.env
         .DB_AUTHTABLE}\` SET email = ?, username = ? where id = ?`,
       [email, username, UserId]
@@ -199,7 +199,7 @@ const ChangePassword = async (req, res) => {
 
   //if the cookie is not there in the user
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First");
+    return res.status(401).send("No Cookie Found, Login First");
   }
 
   //fields for updating the user which will be retrieved from the req body
@@ -215,13 +215,13 @@ const ChangePassword = async (req, res) => {
     confirm_new_password === ""
   ) {
     //return error response in case of error
-    return res.status(400).send("ALL Fields Are Required.");
+    return res.status(404).send("ALL Fields Are Required.");
   }
 
   //check if the new password and confirm new passwords matchs
   if (new_password != confirm_new_password) {
     return res
-      .status(400)
+      .status(422)
       .send("Confirm Password And Confirm New Password Doesn't Match.");
   }
 
@@ -242,7 +242,7 @@ const ChangePassword = async (req, res) => {
 
     //check if a user exists with the id
     if (CheckUserExists[0] === 0) {
-      return res.status(400).send(`No User Found With Provided Id`);
+      return res.status(403).send(`No User Found With Provided Id`);
     }
 
     //check if the typed password and the hashed password saved on the database is correct by using a bcrypt inbuilt function for comparing hashed password
@@ -262,7 +262,7 @@ const ChangePassword = async (req, res) => {
 
     //if the comparasion of the hashed password was not successful
     if (!CompareHashedPassword) {
-      return res.status(400).send("Wrong Password! Try Again.");
+      return res.status(402).send("Wrong Password! Try Again.");
     }
 
     //after all checks we will now update the user with password but first we need to hash the password before saving it, for hashing the typed password before saving it using bcryptjs which is used for hashing using salt
@@ -271,7 +271,7 @@ const ChangePassword = async (req, res) => {
     //hashing the password
     const HashedPassword = await bcrypt.hash(new_password, salt);
 
-    const [UpdateUser] = await req.pool.query(
+   await req.pool.query(
       `UPDATE \`${process.env.DB_AUTHTABLE}\` SET password = ? where id = ?`,
       [HashedPassword, UserId]
     );
@@ -299,7 +299,7 @@ const DeleteUser = async (req, res) => {
 
   //if not id found end the function with a error message
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First.");
+    return res.status(401).send("No Cookie Found, Login First.");
   }
 
   //after checks now we continue with the deletion of the user with the posts posted by the user in the post table
@@ -311,13 +311,13 @@ const DeleteUser = async (req, res) => {
     //after completing all the checks up untill here now we use a await query to delete all items in auth table then post table
 
     //delete all the row where the author id is the retrieved userid
-    const [DeletePostUser] = await req.pool.query(
+   await req.pool.query(
       `DELETE FROM \`${process.env.DB_POSTTABLE}\` WHERE author_id = ?`,
       [UserId]
     );
 
     //delete the row where the id is the retrieved userid
-    const [DeleteAuthUser] = await req.pool.query(
+    await req.pool.query(
       `DELETE FROM \`${process.env.DB_AUTHTABLE}\` WHERE id = ?`,
       [UserId]
     );
@@ -349,7 +349,7 @@ const UserProfile = async (req, res) => {
 
   //return error if the cookie doesnt exist
   if (!CheckCookieExists) {
-    return res.status(400).send("No Cookie Found, Login First.");
+    return res.status(401).send("No Cookie Found, Login First.");
   }
 
   //decode the cookie using jsonwebtoken and use the id to retrieve credentials from the database
