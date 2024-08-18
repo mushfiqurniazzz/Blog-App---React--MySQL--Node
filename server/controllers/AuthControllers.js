@@ -129,7 +129,7 @@ const LogIn = async (req, res) => {
     //the database stores data in rows so after the filter is applied if there exists a row the below validation check would be true and we will continue with logging in the user if false return response, no user with this username exists
     if (CheckExistingUser[0].count === 0) {
       return res
-        .status(404)
+        .status(409)
         .send(`No User Found With ${username} As Username.`);
     }
 

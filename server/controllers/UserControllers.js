@@ -215,7 +215,7 @@ const ChangePassword = async (req, res) => {
     confirm_new_password === ""
   ) {
     //return error response in case of error
-    return res.status(404).send("ALL Fields Are Required.");
+    return res.status(404).send("All Fields Are Required.");
   }
 
   //check if the new password and confirm new passwords matchs
