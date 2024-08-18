@@ -47,7 +47,9 @@ const UserProfile = () => {
       } catch (error) {
         //basic error handling in case of error
         console.error(error);
-
+        if (error.response.status === 401) {
+          return toast.warning("To view your profile, login first.");
+        }
         //if there was an error the error will be rendered to the user through using the use ref declared variable only once
         if (!hasFetcheduserprofiledata.current) {
           toast.error("Something went wrong.");

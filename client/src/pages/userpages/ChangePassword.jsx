@@ -23,22 +23,6 @@ const ChangePassword = () => {
 
   //async await function for sending a put request to the server for changing the user password
   const ChangePasswordHandler = async () => {
-    //if all the input fields are not provided
-    if (
-      !old_password ||
-      old_password === "" ||
-      !new_password ||
-      new_password === "" ||
-      !confirm_new_password ||
-      confirm_new_password === ""
-    ) {
-      return toast.info("All fields are required");
-    }
-
-    //check if the new password and confirm new password matches
-    if (new_password != confirm_new_password) {
-      return toast.info("Passwords do not match.");
-    }
     //using try catch block for better code readability
     try {
       //sending a axios put request to the server using a variable
@@ -74,8 +58,23 @@ const ChangePassword = () => {
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
+      if (error.response.status === 404) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("To change your password, login first.");
+      }
+      if (error.response.status === 422) {
+        return toast.warning("New passwords don't match.");
+      }
+      if (error.response.status === 403) {
+        return toast.warning("No user found with this id.");
+      }
+      if (error.response.status === 402) {
+        return toast.warning("Wrong password, try again.");
+      }
       //rendering a toast notification
-      toast.error("Something went wrong.");
+      return toast.error("Something went wrong.");
     }
   };
   return (

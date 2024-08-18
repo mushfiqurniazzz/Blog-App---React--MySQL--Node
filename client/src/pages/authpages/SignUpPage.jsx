@@ -31,26 +31,6 @@ const SignUpPage = () => {
     //will prevent the default form submission behaviour that is reloading the page
     e.preventDefault();
 
-    //check if all the fields are provided in the input field if all the fields are not provided send a toast warning notification stating all fields are required
-    if (
-      !email ||
-      email === "" ||
-      !username ||
-      username === "" ||
-      !password ||
-      password === "" ||
-      !confirm_password ||
-      confirm_password === ""
-    ) {
-      //returning a statement will end the function and will not continue
-      return toast.warning("All fields are required.");
-    }
-
-    //after all fields are provided check if the user has provided the same password in password and confirm password if not return a warning message using toast notifications
-    if (password != confirm_password) {
-      return toast.warning("Passwords don't match.");
-    }
-
     //after all checks continue with the sign up by sending a post request to the server using axios with the provided credentials in a try catch block for better readability and maintainibility of our code
     try {
       const res = await axios.post("http://localhost:5000/auth/signup", {
@@ -71,7 +51,19 @@ const SignUpPage = () => {
     } catch (error) {
       //basic error handler incase of error
       console.error(error);
-      toast.error("Something went wrong try again later.");
+      if (error.response.status === 404) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("Passwords do not match.");
+      }
+      if (error.response.status === 408) {
+        return toast.warning("User with same email already exists.");
+      }
+      if (error.response.status === 409) {
+        return toast.warning("User with same username already exists.");
+      }
+      return toast.error("Something went wrong try again later.");
     }
   };
   return (

@@ -31,12 +31,6 @@ const LoginPage = () => {
     //will prevent the default form submission behaviour that is reloading the page
     e.preventDefault();
 
-    //check if all the fields are provided in the input field if all the fields are not provided send a toast warning notification stating all fields are required
-    if (!username || username === "" || !password || password === "") {
-      //returning a statement will end the function and will not continue
-      return toast.warning("All fields are required.");
-    }
-
     //after all checks continue with the logging in the user by sending a post request to the server using axios with the provided credentials in a try catch block for better readability and maintainibility of our code
     try {
       const res = await axios.post(
@@ -62,7 +56,16 @@ const LoginPage = () => {
     } catch (error) {
       //basic error handler incase of error
       console.error(error);
-      toast.error("Something went wrong try again later.");
+      if (error.response.status === 404) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("Wrong password, try again.");
+      }
+      if (error.response.status === 409) {
+        return toast.warning("No user with same username exists.");
+      }
+      return toast.error("Something went wrong try again later.");
     }
   };
   return (

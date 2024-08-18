@@ -34,9 +34,11 @@ const DeleteUser = () => {
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
-
-      //rendering a toast notification incase of error
-      toast.error("Something went wrong.");
+ if (error.response.status === 401) {
+   return toast.warning("To delete your account, login first.");
+ }
+ //rendering a toast notification
+ return toast.error("Something went wrong.");
     }
   };
   return (

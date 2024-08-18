@@ -40,9 +40,14 @@ const DeletePost = () => {
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
-
+      if (error.response.status === 422) {
+        return toast.warning("Id was not found to delete the post.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("To delete your post, login first.");
+      }
       //rendering a toast notification incase of error
-      toast.error("Something went wrong.");
+      return toast.error("Something went wrong.");
     }
   };
   return (

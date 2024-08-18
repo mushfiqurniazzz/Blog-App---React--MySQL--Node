@@ -26,18 +26,6 @@ const UpdateUser = () => {
 
   //async await function for updating the user using axios which will be sent to the server
   const UpdateUserHandler = async () => {
-    //first check if all the input fields are provided else return a toast notification
-    if (
-      !email ||
-      email === "" ||
-      !username ||
-      username === "" ||
-      !password ||
-      password === ""
-    ) {
-      return toast.info("All fields are required.");
-    }
-
     //using a try catch block for better readability of code
     try {
       //axios put request in a variable using await keyword
@@ -69,8 +57,20 @@ const UpdateUser = () => {
     } catch (error) {
       //basic error handling in case of error
       console.log(error);
+      if (error.response.status === 401) {
+        return toast.warning("Can't update your accout, login first.");
+      }
+      if (error.response.status === 422) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 404) {
+        return toast.warning("No user found with this id.");
+      }
+      if (error.response.status === 403) {
+        return toast.warning("Wrong password, try again.");
+      }
       //rendering a toast notification about the error
-      toast.error("Something went wrong.");
+      return toast.error("Something went wrong.");
     }
   };
 

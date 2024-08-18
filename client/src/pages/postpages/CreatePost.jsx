@@ -28,11 +28,6 @@ const CreatePost = () => {
     //will prevent the default form submission behaviour that is reloading the page
     e.preventDefault();
 
-    //check if all the  fields are entered
-    if (!post_title || post_title === "" || !post_body || post_body === "") {
-      return toast.warning("All fields are required.");
-    }
-
     //if all fields are given continue with creating the post by sending the credentials to the server
     try {
       // Create FormData object and append form fields
@@ -67,7 +62,13 @@ const CreatePost = () => {
     } catch (error) {
       //basic error handler incase of error, console log the error mesage and send a toast message stating something went wrong
       console.error(error);
-      toast.error("Something went wrong.");
+      if (error.response.status === 404) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("To create a post login first.");
+      }
+      return toast.error("Something went wrong.");
     }
   };
 

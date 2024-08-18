@@ -110,8 +110,20 @@ const UpdatePost = () => {
     } catch (error) {
       //basic error handler incase of error, console log the error mesage and send a toast message stating something went wrong
       console.error(error);
+      if (error.response.status === 422) {
+        return toast.warning("Id was not found for updating post.");
+      }
+      if (error.response.status === 401) {
+        return toast.warning("To update your posts, login first.");
+      }
+      if (error.response.status === 404) {
+        return toast.warning("All fields are required.");
+      }
+      if (error.response.status === 403) {
+        return toast.warning("Can't update other's posts.");
+      }
       //render an error message incase of error
-      toast.error("Something went wrong.");
+      return toast.error("Something went wrong.");
     }
   };
 

@@ -45,6 +45,12 @@ const PostInfoPage = () => {
       } catch (error) {
         //basic error handling incase of error
         console.log(error);
+        if (error.response.status === 422) {
+          return toast.warning("Id was not found for the post.");
+        }
+        if (error.response.status === 401) {
+          return toast.warning("To read this blog, login first.");
+        }
         //render a toast notification using the use ref variable
         if (!hasFetchedPostData.current) {
           toast.error("Something went wrong.");
